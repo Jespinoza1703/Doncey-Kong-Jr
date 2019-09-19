@@ -22,7 +22,3 @@ add_executable(Doncey_Kong_Jr main.c
 
 
 target_link_libraries(Doncey_Kong_Jr -lSDL2 -lSDL2_image)
-
-
-
-
