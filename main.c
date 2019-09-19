@@ -1,25 +1,34 @@
-#include <gtk/gtk.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <SDL2/SDL.h>
 
-static void
-activate (GtkApplication* app, gpointer user_data)
+
+#define WIDTH 420
+#define HEIGHT 360
+#define BPP 24
+
+int main(int argc, char *argv[])
 {
-    GtkWidget *window;
+  SDL_Init(SDL_INIT_VIDEO);
 
-    window = gtk_application_window_new (app);
-    gtk_window_set_title (GTK_WINDOW (window), "Window");
-    gtk_window_set_default_size (GTK_WINDOW (window), 200, 200);
-    gtk_widget_show_all (window);
-}
+  SDL_Window *window = SDL_CreateWindow(
+    "SDL2Test",
+    SDL_WINDOWPOS_UNDEFINED,
+    SDL_WINDOWPOS_UNDEFINED,
+    640,
+    480,
+    0
+  );
 
-int main (int argc, char **argv)
-{
-    GtkApplication *app;
-    int status;
+  SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
+  SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
+  SDL_RenderClear(renderer);
+  SDL_RenderPresent(renderer);
 
-    app = gtk_application_new ("org.gtk.example", G_APPLICATION_FLAGS_NONE);
-    g_signal_connect (app, "activate", G_CALLBACK (activate), NULL);
-    status = g_application_run (G_APPLICATION (app), argc, argv);
-    g_object_unref (app);
+  SDL_Delay(30000);
 
-    return status;
+  SDL_DestroyWindow(window);
+  SDL_Quit();
+
+  return 0;
 }
