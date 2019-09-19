@@ -3,8 +3,8 @@
 #include <SDL2/SDL.h>
 
 
-#define WIDTH 420
-#define HEIGHT 360
+#define WIDTH 1080
+#define HEIGHT 768
 #define BPP 24
 
 int main(int argc, char *argv[])
@@ -12,11 +12,11 @@ int main(int argc, char *argv[])
   SDL_Init(SDL_INIT_VIDEO);
 
   SDL_Window *window = SDL_CreateWindow(
-    "SDL2Test",
+    "Doncey Kong Jr",
     SDL_WINDOWPOS_UNDEFINED,
     SDL_WINDOWPOS_UNDEFINED,
-    640,
-    480,
+    WIDTH,
+    HEIGHT,
     0
   );
 
