@@ -18,7 +18,7 @@ add_executable(Doncey_Kong_Jr main.c
         src/entities/enemies/BlueCrocodile.c
         src/graphics/Menu.c src/graphics/Menu.h
         src/entities/enemies/BlueCrocodile.h
-        src/entities/players/Monkey.h src/game/Game.c src/game/Game.h src/game/status.c src/game/status.h)
+        src/entities/players/Monkey.h src/game/Game.c src/game/Game.h src/game/status.c src/game/status.h src/Util.c src/Util.h)
 
 
 target_link_libraries(Doncey_Kong_Jr -lSDL2 -lSDL2_image)

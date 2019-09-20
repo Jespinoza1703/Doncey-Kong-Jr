@@ -8,17 +8,17 @@
 
 
 void runGame(){
-    Game game;
+    Controller controller;
     SDL_Window *window = NULL;
 
-    initializeGame(window, &game);
-    loadGraphics(&game);
+    start(window, &controller);
+    loadSurfaces(&controller);
     int done = 0;
 
     while(!done){
-        done = processEvents(window, &game);
-        gameRender(&game);
+        done = eventProcessing(window, &controller);
+        gameRendering(&controller);
         SDL_Delay(10);
     }
-    closeWindow(window, &game);
+    closeWindow(window, &controller);
 }

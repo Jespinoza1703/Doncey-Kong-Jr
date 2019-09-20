@@ -4,9 +4,9 @@
 
 #include "Game.h"
 
-int processEvents(SDL_Window *window, Game *game){
+int eventProcessing(SDL_Window *window, Controller *controller){
     SDL_Event event;
-    int done = 0;
+    int finish = 0;
 
     while(SDL_PollEvent(&event)){
         switch(event.type){
@@ -14,68 +14,93 @@ int processEvents(SDL_Window *window, Game *game){
                 if(window){
                     SDL_DestroyWindow(window);
                     window = NULL;
-                    done = 1;
+                    finish = 1;
                 }
             }
                 break;
             case SDL_KEYDOWN:{
                 switch(event.key.keysym.sym){
                     case SDLK_ESCAPE:
-                        done = 1;
+                        finish = 1;
                         break;
                 }
             }
                 break;
             case SDL_QUIT:
-                done = 1;
+                finish = 1;
                 break;
         }
     }
 
     const Uint8 *state = SDL_GetKeyboardState(NULL);
     if(state[SDL_SCANCODE_LEFT]){
-        game->monkey.xPoss -= 1*game->sizeMult;
+        controller->monkey.xPoss -= movingSpeed;
     }
     if(state[SDL_SCANCODE_RIGHT]){
-        game->monkey.xPoss += 1*game->sizeMult;
+        controller->monkey.xPoss += movingSpeed;
     }
-    if(state[SDL_SCANCODE_UP]){
-        game->monkey.yPoss -= 1*game->sizeMult;
+    if(state[SDL_SCANCODE_SPACE]){
+        controller->monkey.yPoss -= movingSpeed;
     }
-    if(state[SDL_SCANCODE_DOWN]){
-        game->monkey.yPoss += 1*game->sizeMult;
-    }
-    return done;
+
+    return finish;
 }
 
-void initializeGame(SDL_Window *window, Game *game){
-    SDL_Init(SDL_INIT_VIDEO);
+void start(SDL_Window *window, Controller *controller){
 
-    game->sizeMult = 3;
-    game->xPoss = 248*game->sizeMult;
-    game->yPoss = 216*game->sizeMult;
-    game->monkey.xPoss = 0;
-    game->monkey.yPoss = game->yPoss-(4*(8*game->sizeMult));
+    SDL_Init(SDL_INIT_EVERYTHING);
+
+    controller->monkey.xPoss = 0;
+    controller->monkey.yPoss = 630;
+
     window = SDL_CreateWindow("Doncey Kong Jr",
                               SDL_WINDOWPOS_UNDEFINED,
                               SDL_WINDOWPOS_UNDEFINED,
-                              WIDTH,
-                              HEIGHT,
+                              SCREEN_WIDTH,
+                              SCREEN_HEIGHT,
                               0);
 
-    game->renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+    controller->renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 }
 
-void gameRender(Game *game){
-    SDL_Rect backRect = {0, 0, game->xPoss, game->yPoss};
-    SDL_RenderCopy(game->renderer, game->background_img, NULL, &backRect);
+void gameRendering(Controller *controller){
 
-    SDL_Rect monkeyRect = {game->monkey.xPoss, game->monkey.yPoss, 25*game->sizeMult, 16*game->sizeMult};
-    SDL_RenderCopy(game->renderer, game->monkey_img, NULL, &monkeyRect);
-    SDL_RenderPresent(game->renderer);
+    SDL_Rect bgRect = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
+    SDL_RenderCopy(controller->renderer, controller->background_img, NULL, &bgRect);
+    SDL_Rect monkeyRect = {controller->monkey.xPoss, controller->monkey.yPoss,
+                           SCREEN_WIDTH*0.1, SCREEN_HEIGHT*0.1};
+    SDL_RenderCopy(controller->renderer, controller->monkey_img, NULL, &monkeyRect);
+
+    SDL_Rect ledgeRect1 = {10, 195,
+                          SCREEN_WIDTH*0.6, 25};
+    SDL_RenderCopy(controller->renderer, controller->ledge_img, NULL, &ledgeRect1);
+    SDL_Rect ledgeRect2 = {615, 225,
+                          SCREEN_WIDTH*0.25, 25};
+    SDL_RenderCopy(controller->renderer, controller->ledge_img, NULL, &ledgeRect2);
+    SDL_Rect ledgeRect3 = {250, 100,
+                          SCREEN_WIDTH*0.08, 25};
+    SDL_RenderCopy(controller->renderer, controller->ledge_img, NULL, &ledgeRect3);
+    SDL_Rect ledgeRect4 = {200, 330,
+                          SCREEN_WIDTH*0.11, 25};
+    SDL_RenderCopy(controller->renderer, controller->ledge_img, NULL, &ledgeRect4);
+    SDL_Rect ledgeRect5 = {200, 470,
+                          SCREEN_WIDTH*0.17, 25};
+    SDL_RenderCopy(controller->renderer, controller->ledge_img, NULL, &ledgeRect5);
+    SDL_Rect ledgeRect6 = {840, 400,
+                           SCREEN_WIDTH*0.2, 25};
+    SDL_RenderCopy(controller->renderer, controller->ledge_img, NULL, &ledgeRect6);
+
+    SDL_Rect donkeyK = {0, 100, 140, 85};
+    SDL_RenderCopy(controller->renderer, controller->donkeyK_img, NULL, &donkeyK);
+
+
+    SDL_RenderPresent(controller->renderer);
 }
 
-void loadGraphics(Game *game){
+/*
+ * Loads all the necessary images
+ */
+void loadSurfaces(Controller *controller){
     SDL_Surface *bgSurface = NULL;
     SDL_Surface *monkeySurface = NULL;
     SDL_Surface *bananaSurface = NULL;
@@ -83,6 +108,8 @@ void loadGraphics(Game *game){
     SDL_Surface *appleSurface = NULL;
     SDL_Surface *blueCrocoSurface = NULL;
     SDL_Surface *redCrocoSurface = NULL;
+    SDL_Surface *ledgeSurface = NULL;
+    SDL_Surface *donkeyKSurface = NULL;
 
     bgSurface = IMG_Load("../images/background.png");
     monkeySurface = IMG_Load("../images/dkjr.png");
@@ -91,50 +118,69 @@ void loadGraphics(Game *game){
     appleSurface = IMG_Load("../images/apple.png");
     blueCrocoSurface = IMG_Load("../images/blueCroco.png");
     redCrocoSurface = IMG_Load("../images/redCroco.png");
+    ledgeSurface = IMG_Load("../images/ledge.png");
+    donkeyKSurface = IMG_Load("../images/donkey.png");
 
+    /*
+     * In case images can't be found with the specified path
+     */
     if (bgSurface == NULL){
-        printf("Cannot find background.png\n\n");
+        printf("Cannot find background.png");
         SDL_Quit();
         exit(1);
     }
     if (monkeySurface == NULL){
-        printf("Cannot find dkjr.png\n\n");
+        printf("Cannot find dkjr.png");
         SDL_Quit();
         exit(1);
     }    if (bananaSurface == NULL){
-        printf("Cannot find banana.png\n\n");
+        printf("Cannot find banana.png");
         SDL_Quit();
         exit(1);
     }
     if (mangoSurface == NULL){
-        printf("Cannot find mango.png\n\n");
+        printf("Cannot find mango.png");
         SDL_Quit();
         exit(1);
     }
     if (appleSurface == NULL){
-        printf("Cannot find apple.png\n\n");
+        printf("Cannot find apple.png");
         SDL_Quit();
         exit(1);
     }
     if (blueCrocoSurface == NULL){
-        printf("Cannot find blueCroco.png\n\n");
+        printf("Cannot find blueCroco.png");
         SDL_Quit();
         exit(1);
     }
     if (redCrocoSurface == NULL){
-        printf("Cannot find redCroco.png\n\n");
+        printf("Cannot find redCroco.png");
+        SDL_Quit();
+        exit(1);
+    }
+    if (ledgeSurface == NULL){
+        printf("Cannot find ledge.png");
+        SDL_Quit();
+        exit(1);
+    }
+    if (donkeyKSurface == NULL){
+        printf("Cannot find donkey.png");
         SDL_Quit();
         exit(1);
     }
 
-
-    game->monkey_img = SDL_CreateTextureFromSurface(game->renderer, monkeySurface);
-    game->background_img = SDL_CreateTextureFromSurface(game->renderer, bgSurface);
-    game->banana_img = SDL_CreateTextureFromSurface(game->renderer, bananaSurface);
-    game->mango_img = SDL_CreateTextureFromSurface(game->renderer, mangoSurface);
-    game->apple_img = SDL_CreateTextureFromSurface(game->renderer, appleSurface);
-    game->blueCroco_img = SDL_CreateTextureFromSurface(game->renderer, blueCrocoSurface);
-    game->redCroco_img = SDL_CreateTextureFromSurface(game->renderer, redCrocoSurface);
+    /*
+     * Creating textures for images
+     */
+    controller->monkey_img = SDL_CreateTextureFromSurface(controller->renderer, monkeySurface);
+    controller->background_img = SDL_CreateTextureFromSurface(controller->renderer, bgSurface);
+    controller->banana_img = SDL_CreateTextureFromSurface(controller->renderer, bananaSurface);
+    controller->mango_img = SDL_CreateTextureFromSurface(controller->renderer, mangoSurface);
+    controller->apple_img = SDL_CreateTextureFromSurface(controller->renderer, appleSurface);
+    controller->blueCroco_img = SDL_CreateTextureFromSurface(controller->renderer, blueCrocoSurface);
+    controller->redCroco_img = SDL_CreateTextureFromSurface(controller->renderer, redCrocoSurface);
+    controller->ledge_img = SDL_CreateTextureFromSurface(controller->renderer, ledgeSurface);
+    controller->donkeyK_img = SDL_CreateTextureFromSurface(controller->renderer, donkeyKSurface);
 
     SDL_FreeSurface(monkeySurface);
     SDL_FreeSurface(bgSurface);
@@ -143,17 +189,21 @@ void loadGraphics(Game *game){
     SDL_FreeSurface(appleSurface);
     SDL_FreeSurface(blueCrocoSurface);
     SDL_FreeSurface(redCrocoSurface);
+    SDL_FreeSurface(ledgeSurface);
+    SDL_FreeSurface(donkeyKSurface);
 }
 
-void closeWindow(SDL_Window *window, Game *game){
-    SDL_DestroyTexture(game->monkey_img);
-    SDL_DestroyTexture(game->background_img);
-    SDL_DestroyTexture(game->blueCroco_img);
-    SDL_DestroyTexture(game->redCroco_img);
-    SDL_DestroyTexture(game->banana_img);
-    SDL_DestroyTexture(game->mango_img);
-    SDL_DestroyTexture(game->apple_img);
-    SDL_DestroyRenderer(game->renderer);
+void closeWindow(SDL_Window *window, Controller *controller){
+    SDL_DestroyTexture(controller->monkey_img);
+    SDL_DestroyTexture(controller->background_img);
+    SDL_DestroyTexture(controller->blueCroco_img);
+    SDL_DestroyTexture(controller->redCroco_img);
+    SDL_DestroyTexture(controller->banana_img);
+    SDL_DestroyTexture(controller->mango_img);
+    SDL_DestroyTexture(controller->apple_img);
+    SDL_DestroyTexture(controller->ledge_img);
+    SDL_DestroyTexture(controller->donkeyK_img);
+    SDL_DestroyRenderer(controller->renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();
 }
