@@ -1,222 +1,317 @@
-//
-// Created by jessica on 16/09/19.
-//
-
 #include "Game.h"
 
-int eventProcessing(SDL_Window *window, Controller *controller){
-    SDL_Event event;
-    int finish = 0;
+void loadSurfaces(Controller *controller)
+{
+    SDL_Surface *surface = NULL;
 
-    while(SDL_PollEvent(&event)){
-        switch(event.type){
-            case SDL_WINDOWEVENT_CLOSE:{
-                if(window){
+    //Load images and create rendering textures from them
+    surface = IMG_Load("../images/dkjr.png");
+    if(surface == NULL)
+    {
+        printf("Cannot find monkey_lta.png!\n\n");
+        SDL_Quit();
+        exit(1);
+    }
+    controller->monkeyFrames[0] = SDL_CreateTextureFromSurface(controller->renderer, surface);
+    SDL_FreeSurface(surface);
+
+    surface = IMG_Load("../images/dkjr.png");
+    if(surface == NULL)
+    {
+        printf("Cannot find monkey_ltb.png!\n\n");
+        SDL_Quit();
+        exit(1);
+    }
+    controller->monkeyFrames[1] = SDL_CreateTextureFromSurface(controller->renderer, surface);
+    SDL_FreeSurface(surface);
+
+    surface = IMG_Load("../images/ledge.png");
+    controller->brick = SDL_CreateTextureFromSurface(controller->renderer, surface);
+    SDL_FreeSurface(surface);
+
+    controller->monkey.x = 320-40;
+    controller->monkey.y = 240-40;
+    controller->monkey.dx = 0;
+    controller->monkey.dy = 0;
+    controller->monkey.onLedge = 0;
+    controller->monkey.animFrame = 0;
+    controller->monkey.facingLeft = 1;
+    controller->monkey.slowingDown = 0;
+
+    controller->time = 0;
+
+    //init ledges
+    for(int i = 0; i < num; i++)
+    {
+        controller->ledges[i].w = 256;
+        controller->ledges[i].h = 64;
+        controller->ledges[i].x = i*256;
+        controller->ledges[i].y = 400;
+    }
+    controller->ledges[num-1].x = 590;
+    controller->ledges[num-1].y = 200;
+
+    controller->ledges[num-2].x = 350;
+    controller->ledges[num-2].y = 350;
+}
+
+void process(Controller *controller)
+{
+    //add time
+    controller->time++;
+
+    //monkey movement
+    Monkey *monkey = &controller->monkey;
+    monkey->x += monkey->dx;
+    monkey->y += monkey->dy;
+
+    if(monkey->dx != 0 && monkey->onLedge && !monkey->slowingDown)
+    {
+        if(controller->time % 2 == 0)
+        {
+            if(monkey->animFrame == 0)
+            {
+                monkey->animFrame = 1;
+            }
+            else
+            {
+                monkey->animFrame = 0;
+            }
+        }
+    }
+
+    monkey->dy += GRAVITY;
+}
+
+void collisionDetect(Controller *controller)
+{
+    //Check for collision with any ledges (brick blocks)
+    for(int i = 0; i < num; i++)
+    {
+        float mw = 25, mh = 16;
+        float mx = controller->monkey.x, my = controller->monkey.y;
+        float bx = controller->ledges[i].x, by = controller->ledges[i].y, bw = controller->ledges[i].w, bh = controller->ledges[i].h;
+
+        if(mx+mw/2 > bx && mx+mw/2 < bx+bw)
+        {
+            //are we bumping our head?
+            if(my < by+bh && my > by && controller->monkey.dy < 0)
+            {
+                //correct y
+                controller->monkey.y = by+bh;
+                my = by+bh;
+
+                //bumped our head, stop any jump velocity
+                controller->monkey.dy = 0;
+                controller->monkey.onLedge = 1;
+            }
+        }
+        if(mx+mw > bx && mx<bx+bw)
+        {
+            //are we landing on the ledge
+            if(my+mh > by && my < by && controller->monkey.dy > 0)
+            {
+                //correct y
+                controller->monkey.y = by-mh;
+                my = by-mh;
+
+                //landed on this ledge, stop any jump velocity
+                controller->monkey.dy = 0;
+                controller->monkey.onLedge = 1;
+            }
+        }
+
+        if(my+mh > by && my<by+bh)
+        {
+            //rubbing against right edge
+            if(mx < bx+bw && mx+mw > bx+bw && controller->monkey.dx < 0)
+            {
+                //correct x
+                controller->monkey.x = bx+bw;
+                mx = bx+bw;
+
+                controller->monkey.dx = 0;
+            }
+                //rubbing against left edge
+            else if(mx+mw > bx && mx < bx && controller->monkey.dx > 0)
+            {
+                //correct x
+                controller->monkey.x = bx-mw;
+                mx = bx-mw;
+
+                controller->monkey.dx = 0;
+            }
+        }
+    }
+}
+
+int processEvents(SDL_Window *window, Controller *controller)
+{
+    SDL_Event event;
+    int done = 0;
+
+    while(SDL_PollEvent(&event))
+    {
+        switch(event.type)
+        {
+            case SDL_WINDOWEVENT_CLOSE:
+            {
+                if(window)
+                {
                     SDL_DestroyWindow(window);
                     window = NULL;
-                    finish = 1;
+                    done = 1;
                 }
             }
                 break;
-            case SDL_KEYDOWN:{
-                switch(event.key.keysym.sym){
+            case SDL_KEYDOWN:
+            {
+                switch(event.key.keysym.sym)
+                {
                     case SDLK_ESCAPE:
-                        finish = 1;
+                        done = 1;
+                        break;
+                    case SDLK_UP:
+                        if(controller->monkey.onLedge)
+                        {
+                            controller->monkey.dy = -2;
+                            controller->monkey.onLedge = 0;
+                        }
                         break;
                 }
             }
                 break;
             case SDL_QUIT:
-                finish = 1;
+                //quit out of the controller
+                done = 1;
                 break;
         }
     }
 
-    const Uint8 *keyboardState = SDL_GetKeyboardState(NULL);
-    if(keyboardState[SDL_SCANCODE_LEFT]){
-        controller->monkey.xPoss -= movingSpeed;
-    }
-    if(keyboardState[SDL_SCANCODE_RIGHT]){
-        controller->monkey.xPoss += movingSpeed;
-    }
-    if(keyboardState[SDL_SCANCODE_SPACE]){
-        controller->monkey.yPoss -= movingSpeed;
+    //More jumping
+    const Uint8 *state = SDL_GetKeyboardState(NULL);
+    if(state[SDL_SCANCODE_UP])
+    {
+        controller->monkey.dy -= 0.20;
     }
 
-    return finish;
+    //Walking
+    if(state[SDL_SCANCODE_LEFT])
+    {
+        controller->monkey.dx -= 0.25;
+        if(controller->monkey.dx < -SPEED)
+        {
+            controller->monkey.dx = -SPEED;
+        }
+        controller->monkey.facingLeft = 1;
+        controller->monkey.slowingDown = 0;
+    }
+    else if(state[SDL_SCANCODE_RIGHT])
+    {
+        controller->monkey.dx += 0.25;
+        if(controller->monkey.dx > SPEED)
+        {
+            controller->monkey.dx = SPEED;
+        }
+        controller->monkey.facingLeft = 0;
+        controller->monkey.slowingDown = 0;
+    }
+    else
+    {
+        controller->monkey.animFrame = 0;
+        controller->monkey.dx *= 0.08f;
+        controller->monkey.slowingDown = 1;
+        if(fabsf(controller->monkey.dx) < 0.01f)
+        {
+            controller->monkey.dx = 0;
+        }
+    }
+
+    return done;
 }
 
-void start(SDL_Window *window, Controller *controller){
+void render(SDL_Renderer *renderer, Controller *controller)
+{
+    //set the drawing color to blue
+    SDL_SetRenderDrawColor(renderer, 128, 128, 255, 255);
 
-    SDL_Init(SDL_INIT_EVERYTHING);
+    //Clear the screen (to blue)
+    SDL_RenderClear(renderer);
 
-    controller->monkey.xPoss = 0;
-    controller->monkey.yPoss = 630;
+    //set the drawing color to white
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 
-    window = SDL_CreateWindow("Doncey Kong Jr",
-                              SDL_WINDOWPOS_UNDEFINED,
-                              SDL_WINDOWPOS_UNDEFINED,
-                              SCREEN_WIDTH,
-                              SCREEN_HEIGHT,
-                              0);
-    controller->renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+    for(int i = 0; i < num; i++)
+    {
+        SDL_Rect ledgeRect = { controller->ledges[i].x, controller->ledges[i].y,
+                               controller->ledges[i].w, controller->ledges[i].h };
+        SDL_RenderCopy(renderer, controller->brick, NULL, &ledgeRect);
+    }
+
+    //draw a rectangle at monkey's position
+    SDL_Rect rect = { controller->monkey.x, controller->monkey.y, 48, 48 };
+    SDL_RenderCopyEx(renderer, controller->monkeyFrames[controller->monkey.animFrame],
+                     NULL, &rect, 0, NULL, (controller->monkey.facingLeft == 0));
+
+
+
+    //We are done drawing, "present" or show to the screen what we've drawn
+    SDL_RenderPresent(renderer);
 }
 
-void gameRendering(Controller *controller){
+int main(int argc, char *argv[])
+{
+    Controller controller;
+    SDL_Window *window = NULL;                    // Declare a window
+    SDL_Renderer *renderer = NULL;                // Declare a renderer
 
-    SDL_Rect bgRect = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
-    SDL_RenderCopy(controller->renderer, controller->background_img, NULL, &bgRect);
-    SDL_Rect monkeyRect = {controller->monkey.xPoss, controller->monkey.yPoss,
-                           SCREEN_WIDTH*0.1, SCREEN_HEIGHT*0.1};
-    SDL_RenderCopy(controller->renderer, controller->monkey_img, NULL, &monkeyRect);
+    SDL_Init(SDL_INIT_VIDEO);              // Initialize SDL2
 
-    SDL_Rect donkeyK = {0, 100, 140, 85};
-    SDL_RenderCopy(controller->renderer, controller->donkeyK_img, NULL, &donkeyK);
+    srandom((int)time(NULL));
 
-    // Render ledges
-    SDL_Rect ledgeRect0 = {10, 195,
-                          SCREEN_WIDTH*0.6, 25};
-    controller->ledges[0].rect = ledgeRect0;
-    SDL_RenderCopy(controller->renderer, controller->ledge_img, NULL, &controller->ledges[0].rect);
+    //Create an application window with the following settings:
+    window = SDL_CreateWindow("controller Window",                     // window title
+                              SDL_WINDOWPOS_UNDEFINED,           // initial x position
+                              SDL_WINDOWPOS_UNDEFINED,           // initial y position
+                              SCREEN_WIDTH,                               // width, in pixels
+                              SCREEN_HEIGHT,                               // height, in pixels
+                              0                                  // flags
+    );
+    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    controller.renderer = renderer;
 
-    SDL_Rect ledgeRect1 = {615, 225,
-                          SCREEN_WIDTH*0.25, 25};
-    controller->ledges[1].rect = ledgeRect1;
-    SDL_RenderCopy(controller->renderer, controller->ledge_img, NULL, &controller->ledges[1].rect);
+    loadSurfaces(&controller);
 
-    SDL_Rect ledgeRect2 = {250, 100,
-                          SCREEN_WIDTH*0.08, 25};
-    controller->ledges[2].rect = ledgeRect2;
-    SDL_RenderCopy(controller->renderer, controller->ledge_img, NULL, &controller->ledges[2].rect);
+    // The window is open: enter program loop (see SDL_PollEvent)
+    int done = 0;
 
-    SDL_Rect ledgeRect3 = {200, 330,
-                          SCREEN_WIDTH*0.11, 25};
-    controller->ledges[3].rect = ledgeRect3;
-    SDL_RenderCopy(controller->renderer, controller->ledge_img, NULL, &controller->ledges[3].rect);
+    //Event loop
+    while(!done)
+    {
+        //Check for events
+        done = processEvents(window, &controller);
 
-    SDL_Rect ledgeRect4 = {200, 470,
-                          SCREEN_WIDTH*0.17, 25};
-    controller->ledges[4].rect = ledgeRect4;
-    SDL_RenderCopy(controller->renderer, controller->ledge_img, NULL, &controller->ledges[4].rect);
+        process(&controller);
+        collisionDetect(&controller);
 
-    SDL_Rect ledgeRect5 = {840, 400,
-                           SCREEN_WIDTH*0.2, 25};
-    controller->ledges[5].rect = ledgeRect5;
-    SDL_RenderCopy(controller->renderer, controller->ledge_img, NULL, &controller->ledges[5].rect);
+        //Render display
+        render(renderer, &controller);
 
-
-
-    SDL_RenderPresent(controller->renderer);
-}
-
-/*
- * Loads all the necessary images
- */
-void loadSurfaces(Controller *controller){
-    SDL_Surface *bgSurface = NULL;
-    SDL_Surface *monkeySurface = NULL;
-    SDL_Surface *bananaSurface = NULL;
-    SDL_Surface *mangoSurface = NULL;
-    SDL_Surface *appleSurface = NULL;
-    SDL_Surface *blueCrocoSurface = NULL;
-    SDL_Surface *redCrocoSurface = NULL;
-    SDL_Surface *ledgeSurface = NULL;
-    SDL_Surface *donkeyKSurface = NULL;
-
-    bgSurface = IMG_Load("../images/background.png");
-    monkeySurface = IMG_Load("../images/dkjr.png");
-    bananaSurface = IMG_Load("../images/banana.png");
-    mangoSurface = IMG_Load("../images/mango.png");
-    appleSurface = IMG_Load("../images/apple.png");
-    blueCrocoSurface = IMG_Load("../images/blueCroco.png");
-    redCrocoSurface = IMG_Load("../images/redCroco.png");
-    ledgeSurface = IMG_Load("../images/ledge.png");
-    donkeyKSurface = IMG_Load("../images/donkey.png");
-
-    /*
-     * In case images can't be found with the specified path
-     */
-    if (bgSurface == NULL){
-        printf("Cannot find background.png");
-        SDL_Quit();
-        exit(1);
-    }
-    if (monkeySurface == NULL){
-        printf("Cannot find dkjr.png");
-        SDL_Quit();
-        exit(1);
-    }    if (bananaSurface == NULL){
-        printf("Cannot find banana.png");
-        SDL_Quit();
-        exit(1);
-    }
-    if (mangoSurface == NULL){
-        printf("Cannot find mango.png");
-        SDL_Quit();
-        exit(1);
-    }
-    if (appleSurface == NULL){
-        printf("Cannot find apple.png");
-        SDL_Quit();
-        exit(1);
-    }
-    if (blueCrocoSurface == NULL){
-        printf("Cannot find blueCroco.png");
-        SDL_Quit();
-        exit(1);
-    }
-    if (redCrocoSurface == NULL){
-        printf("Cannot find redCroco.png");
-        SDL_Quit();
-        exit(1);
-    }
-    if (ledgeSurface == NULL){
-        printf("Cannot find ledge.png");
-        SDL_Quit();
-        exit(1);
-    }
-    if (donkeyKSurface == NULL){
-        printf("Cannot find donkey.png");
-        SDL_Quit();
-        exit(1);
+        //don't burn up the CPU
+        //SDL_Delay(10);
     }
 
-    /*
-     * Creating textures for images
-     */
-    controller->monkey_img = SDL_CreateTextureFromSurface(controller->renderer, monkeySurface);
-    controller->background_img = SDL_CreateTextureFromSurface(controller->renderer, bgSurface);
-    controller->banana_img = SDL_CreateTextureFromSurface(controller->renderer, bananaSurface);
-    controller->mango_img = SDL_CreateTextureFromSurface(controller->renderer, mangoSurface);
-    controller->apple_img = SDL_CreateTextureFromSurface(controller->renderer, appleSurface);
-    controller->blueCroco_img = SDL_CreateTextureFromSurface(controller->renderer, blueCrocoSurface);
-    controller->redCroco_img = SDL_CreateTextureFromSurface(controller->renderer, redCrocoSurface);
-    controller->ledge_img = SDL_CreateTextureFromSurface(controller->renderer, ledgeSurface);
-    controller->donkeyK_img = SDL_CreateTextureFromSurface(controller->renderer, donkeyKSurface);
 
-    SDL_FreeSurface(monkeySurface);
-    SDL_FreeSurface(bgSurface);
-    SDL_FreeSurface(bananaSurface);
-    SDL_FreeSurface(mangoSurface);
-    SDL_FreeSurface(appleSurface);
-    SDL_FreeSurface(blueCrocoSurface);
-    SDL_FreeSurface(redCrocoSurface);
-    SDL_FreeSurface(ledgeSurface);
-    SDL_FreeSurface(donkeyKSurface);
-}
+    //Shutdown controller and unload all memory
+    SDL_DestroyTexture(controller.monkeyFrames[0]);
+    SDL_DestroyTexture(controller.monkeyFrames[1]);
+    SDL_DestroyTexture(controller.brick);
 
-
-void closeWindow(SDL_Window *window, Controller *controller){
-    SDL_DestroyTexture(controller->monkey_img);
-    SDL_DestroyTexture(controller->background_img);
-    SDL_DestroyTexture(controller->blueCroco_img);
-    SDL_DestroyTexture(controller->redCroco_img);
-    SDL_DestroyTexture(controller->banana_img);
-    SDL_DestroyTexture(controller->mango_img);
-    SDL_DestroyTexture(controller->apple_img);
-    SDL_DestroyTexture(controller->ledge_img);
-    SDL_DestroyTexture(controller->donkeyK_img);
-    SDL_DestroyRenderer(controller->renderer);
+    // Close and destroy the window
     SDL_DestroyWindow(window);
+    SDL_DestroyRenderer(renderer);
+
+    // Clean up
     SDL_Quit();
+    return 0;
 }

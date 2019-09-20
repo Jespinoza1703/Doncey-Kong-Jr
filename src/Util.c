@@ -20,9 +20,11 @@ int collision(SDL_Rect recA, SDL_Rect recB){
 
 int ledgeCollision(SDL_Rect recA, SDL_Rect recB){
 
-    if(recA.y + recA.h <= recB.y)
+    if(recA.x + recA.w >= recB.x)
         return 0;
-    if(recA.y >= recB.y + recB.h)
+    if(recA.x <= recB.x + recB.w)
+        return 0;
+    if(recA.y + recA.h <= recB.y)
         return 0;
 
     return 1;

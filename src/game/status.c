@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include "status.h"
 
-
+/*
 void runGame(){
     Controller controller;
     SDL_Window *window = NULL;
@@ -17,9 +17,10 @@ void runGame(){
     int finish = 0;
 
     while(finish != 1){
-        finish = eventProcessing(window, &controller);
+        finish = eventManager(window, &controller);
         gameRendering(&controller);
         SDL_Delay(10);
     }
     closeWindow(window, &controller);
 }
+ */
