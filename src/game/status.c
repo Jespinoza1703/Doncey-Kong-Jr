@@ -13,10 +13,11 @@ void runGame(){
 
     start(window, &controller);
     loadSurfaces(&controller);
-    int done = 0;
 
-    while(!done){
-        done = eventProcessing(window, &controller);
+    int finish = 0;
+
+    while(finish != 1){
+        finish = eventProcessing(window, &controller);
         gameRendering(&controller);
         SDL_Delay(10);
     }

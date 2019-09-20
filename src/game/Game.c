@@ -32,14 +32,14 @@ int eventProcessing(SDL_Window *window, Controller *controller){
         }
     }
 
-    const Uint8 *state = SDL_GetKeyboardState(NULL);
-    if(state[SDL_SCANCODE_LEFT]){
+    const Uint8 *keyboardState = SDL_GetKeyboardState(NULL);
+    if(keyboardState[SDL_SCANCODE_LEFT]){
         controller->monkey.xPoss -= movingSpeed;
     }
-    if(state[SDL_SCANCODE_RIGHT]){
+    if(keyboardState[SDL_SCANCODE_RIGHT]){
         controller->monkey.xPoss += movingSpeed;
     }
-    if(state[SDL_SCANCODE_SPACE]){
+    if(keyboardState[SDL_SCANCODE_SPACE]){
         controller->monkey.yPoss -= movingSpeed;
     }
 
@@ -59,7 +59,6 @@ void start(SDL_Window *window, Controller *controller){
                               SCREEN_WIDTH,
                               SCREEN_HEIGHT,
                               0);
-
     controller->renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 }
 
@@ -71,27 +70,40 @@ void gameRendering(Controller *controller){
                            SCREEN_WIDTH*0.1, SCREEN_HEIGHT*0.1};
     SDL_RenderCopy(controller->renderer, controller->monkey_img, NULL, &monkeyRect);
 
-    SDL_Rect ledgeRect1 = {10, 195,
-                          SCREEN_WIDTH*0.6, 25};
-    SDL_RenderCopy(controller->renderer, controller->ledge_img, NULL, &ledgeRect1);
-    SDL_Rect ledgeRect2 = {615, 225,
-                          SCREEN_WIDTH*0.25, 25};
-    SDL_RenderCopy(controller->renderer, controller->ledge_img, NULL, &ledgeRect2);
-    SDL_Rect ledgeRect3 = {250, 100,
-                          SCREEN_WIDTH*0.08, 25};
-    SDL_RenderCopy(controller->renderer, controller->ledge_img, NULL, &ledgeRect3);
-    SDL_Rect ledgeRect4 = {200, 330,
-                          SCREEN_WIDTH*0.11, 25};
-    SDL_RenderCopy(controller->renderer, controller->ledge_img, NULL, &ledgeRect4);
-    SDL_Rect ledgeRect5 = {200, 470,
-                          SCREEN_WIDTH*0.17, 25};
-    SDL_RenderCopy(controller->renderer, controller->ledge_img, NULL, &ledgeRect5);
-    SDL_Rect ledgeRect6 = {840, 400,
-                           SCREEN_WIDTH*0.2, 25};
-    SDL_RenderCopy(controller->renderer, controller->ledge_img, NULL, &ledgeRect6);
-
     SDL_Rect donkeyK = {0, 100, 140, 85};
     SDL_RenderCopy(controller->renderer, controller->donkeyK_img, NULL, &donkeyK);
+
+    // Render ledges
+    SDL_Rect ledgeRect0 = {10, 195,
+                          SCREEN_WIDTH*0.6, 25};
+    controller->ledges[0].rect = ledgeRect0;
+    SDL_RenderCopy(controller->renderer, controller->ledge_img, NULL, &controller->ledges[0].rect);
+
+    SDL_Rect ledgeRect1 = {615, 225,
+                          SCREEN_WIDTH*0.25, 25};
+    controller->ledges[1].rect = ledgeRect1;
+    SDL_RenderCopy(controller->renderer, controller->ledge_img, NULL, &controller->ledges[1].rect);
+
+    SDL_Rect ledgeRect2 = {250, 100,
+                          SCREEN_WIDTH*0.08, 25};
+    controller->ledges[2].rect = ledgeRect2;
+    SDL_RenderCopy(controller->renderer, controller->ledge_img, NULL, &controller->ledges[2].rect);
+
+    SDL_Rect ledgeRect3 = {200, 330,
+                          SCREEN_WIDTH*0.11, 25};
+    controller->ledges[3].rect = ledgeRect3;
+    SDL_RenderCopy(controller->renderer, controller->ledge_img, NULL, &controller->ledges[3].rect);
+
+    SDL_Rect ledgeRect4 = {200, 470,
+                          SCREEN_WIDTH*0.17, 25};
+    controller->ledges[4].rect = ledgeRect4;
+    SDL_RenderCopy(controller->renderer, controller->ledge_img, NULL, &controller->ledges[4].rect);
+
+    SDL_Rect ledgeRect5 = {840, 400,
+                           SCREEN_WIDTH*0.2, 25};
+    controller->ledges[5].rect = ledgeRect5;
+    SDL_RenderCopy(controller->renderer, controller->ledge_img, NULL, &controller->ledges[5].rect);
+
 
 
     SDL_RenderPresent(controller->renderer);
@@ -192,6 +204,7 @@ void loadSurfaces(Controller *controller){
     SDL_FreeSurface(ledgeSurface);
     SDL_FreeSurface(donkeyKSurface);
 }
+
 
 void closeWindow(SDL_Window *window, Controller *controller){
     SDL_DestroyTexture(controller->monkey_img);

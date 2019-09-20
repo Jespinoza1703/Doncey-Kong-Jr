@@ -54,10 +54,9 @@ typedef struct{
 
 typedef struct{
 
-    int xPoss;
-    int yPoss;
+    SDL_Rect rect;
 
-} Ledges;
+} Ledge;
 
 
 /*
@@ -69,8 +68,8 @@ typedef struct{
     int yPoss;
     Monkey monkey;
 
-    Ledges ledges[5];
-    Ledges trees[4];
+    Ledge ledges[5];
+    Ledge trees[4];
 
     SDL_Renderer *renderer;
 
