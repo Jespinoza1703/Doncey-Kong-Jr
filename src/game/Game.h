@@ -5,8 +5,8 @@
 
 #define SCREEN_WIDTH 1080
 #define SCREEN_HEIGHT 768
-#define SPEED 0.8
-#define GRAVITY  0.18
+#define SPEED 6
+#define GRAVITY  0.32f
 #define num 15
 
 typedef struct
@@ -37,7 +37,7 @@ typedef struct
 
     //Images
     SDL_Texture *monkeyFrames[2];
-    SDL_Texture *brick;
+    SDL_Texture *ledge;
 
     int time;
 
@@ -50,5 +50,5 @@ typedef struct
 void loadSurfaces(Controller *controller);
 void process(Controller *controller);
 void collisionDetect(Controller *controller);
-int processEvents(SDL_Window *window, Controller *controller);
+int eventManager(SDL_Window *window, Controller *controller);
 void render(SDL_Renderer *renderer, Controller *controller);
