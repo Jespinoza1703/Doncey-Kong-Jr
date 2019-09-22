@@ -18,7 +18,7 @@ void runGame(){
 
     while(finish != 1){
         finish = eventManager(window, &controller);
-        gameRendering(&controller);
+        render(&controller);
         SDL_Delay(10);
     }
     closeWindow(window, &controller);

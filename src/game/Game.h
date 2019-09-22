@@ -7,7 +7,7 @@
 #define SCREEN_HEIGHT 768
 #define SPEED 6
 #define GRAVITY  0.32f
-#define num 15
+#define ledgeAmount 15
 
 typedef struct
 {
@@ -33,11 +33,18 @@ typedef struct
     Monkey monkey;
 
     //Ledges
-    Ledge ledges[num];
+    Ledge ledges[ledgeAmount];
 
     //Images
-    SDL_Texture *monkeyFrames[2];
+    SDL_Texture *monkeyFrames[10];
     SDL_Texture *ledge;
+    SDL_Texture *background_img;
+    SDL_Texture *blueCroco_img;
+    SDL_Texture *redCroco_img;
+    SDL_Texture *banana_img;
+    SDL_Texture *mango_img;
+    SDL_Texture *apple_img;
+    SDL_Texture *ledge_img;
 
     int time;
 
@@ -47,8 +54,9 @@ typedef struct
 } Controller;
 
 
-void loadSurfaces(Controller *controller);
+void loadGraphics(Controller *controller);
 void process(Controller *controller);
 void collisionDetect(Controller *controller);
 int eventManager(SDL_Window *window, Controller *controller);
 void render(SDL_Renderer *renderer, Controller *controller);
+void init(Controller *controller);
