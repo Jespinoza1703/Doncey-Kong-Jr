@@ -1,10 +1,13 @@
 #include "Game.h"
 
 
-void init(Controller *controller){
+void initScene(Controller *controller){
 
     controller->monkey.x = 320-40;
     controller->monkey.y = 240-40;
+    controller->monkey.width = 80;
+    controller->monkey.height = 50;
+    controller->monkey.dead = 0;
     controller->monkey.dx = 0;
     controller->monkey.dy = 0;
     controller->monkey.onLedge = 0;
@@ -33,7 +36,7 @@ void init(Controller *controller){
 
     controller->ledges[ledgeAmount-4].x = 200;
     controller->ledges[ledgeAmount-4].y = 330;
-    controller->ledges[ledgeAmount-4].w = SCREEN_WIDTH*0.11;
+    controller->ledges[ledgeAmount-4].w = SCREEN_WIDTH*0.81;
 
     controller->ledges[ledgeAmount-5].x = 200;
     controller->ledges[ledgeAmount-5].y = 470;
@@ -49,13 +52,16 @@ void loadGraphics(Controller *controller)
     //Load images and create rendering textures from them
     SDL_Surface *surface = NULL;
 
-    //Load images and create rendering textures from them
+    /*
+     * In case images can't be found with the specified path
+     */
     surface = IMG_Load("../images/jrStanding.png");
     if (surface == NULL){
         printf("Cannot find jrStanding.png\n\n");
         SDL_Quit();
         exit(1);
     }
+    //Assigns images
     controller->monkeyFrames[0] = SDL_CreateTextureFromSurface(controller->renderer, surface);
     SDL_FreeSurface(surface);
 
@@ -168,7 +174,7 @@ void loadGraphics(Controller *controller)
     controller->donkeyK_img = SDL_CreateTextureFromSurface(controller->renderer, surface);
     SDL_FreeSurface(surface);
 
-    init(controller);
+    initScene(controller);
 }
 
 
@@ -206,7 +212,7 @@ void collisionDetect(Controller *controller)
     //Check for collision with any ledges (brick blocks)
     for(int i = 0; i < ledgeAmount; i++)
     {
-        float mw = 105, mh = 70;
+        float mw = controller->monkey.width, mh = controller->monkey.height;
         float mx = controller->monkey.x, my = controller->monkey.y;
         float bx = controller->ledges[i].x, by = controller->ledges[i].y;
         float bw = controller->ledges[i].w, bh = controller->ledges[i].h;
@@ -270,6 +276,10 @@ int eventManager(SDL_Window *window, Controller *controller)
     SDL_Event event;
     int finish = 0;
 
+    if (controller->monkey.dead == 1){
+        endGame();
+    }
+
     while(SDL_PollEvent(&event))
     {
         switch(event.type)
@@ -294,7 +304,7 @@ int eventManager(SDL_Window *window, Controller *controller)
                     case SDLK_UP:
                         if(controller->monkey.onLedge)
                         {
-                            controller->monkey.dy = -2;
+                            controller->monkey.dy = -4;
                             controller->monkey.onLedge = 0;
                         }
                         break;
@@ -310,40 +320,58 @@ int eventManager(SDL_Window *window, Controller *controller)
 
     //Jumping
     const Uint8 *state = SDL_GetKeyboardState(NULL);
+    Monkey *monkey = &controller->monkey;
     if(state[SDL_SCANCODE_UP])
     {
-        controller->monkey.dy -= 0.2f;
+        monkey->dy -= 0.2f;
     }
 
     //Walking
     if(state[SDL_SCANCODE_LEFT])
     {
-        controller->monkey.dx -= 0.25;
-        if(controller->monkey.dx < -SPEED)
-        {
-            controller->monkey.dx = -SPEED;
+        if(monkey->x > 0){
+            monkey->dx -= 0.25;
+            if(monkey->dx < -SPEED)
+            {
+                monkey->dx = -SPEED;
+            }
+            monkey->facingLeft += 1;
+            monkey->slowingDown = 0;
         }
-        controller->monkey.facingLeft += 1;
-        controller->monkey.slowingDown = 0;
+        else{
+            monkey->x = 0;
+        }
     }
 
     else if(state[SDL_SCANCODE_RIGHT])
     {
-        controller->monkey.dx += 0.25;
-        if(controller->monkey.dx > SPEED)
-        {
-            controller->monkey.dx = SPEED;
+        if(monkey->x < (SCREEN_WIDTH - monkey->width)){
+            monkey->dx += 0.25;
+            if(monkey->dx > SPEED)
+            {
+                monkey->dx = SPEED;
+            }
+            monkey->facingLeft = 0;
+            monkey->slowingDown = 0;
         }
-        controller->monkey.facingLeft = 0;
-        controller->monkey.slowingDown = 0;
+        else{
+            monkey->x = (SCREEN_WIDTH - monkey->width);
+        }
     }
+
     else{
-        controller->monkey.animFrame = 0;
-        controller->monkey.dx *= 0.08f;
-        controller->monkey.slowingDown = 1;
-        if(fabsf(controller->monkey.dx) < 0.01f){
-            controller->monkey.dx = 0;
+        if(monkey->y <= (SCREEN_HEIGHT)){
+            monkey->animFrame = 0;
+            monkey->dx *= 0.5f;
+            monkey->slowingDown = 1;
+            if(fabsf(monkey->dx) < 0.1f){
+                monkey->dx = 0;
+            }
         }
+        else{
+            endGame();
+        }
+
     }
 
     return finish;
@@ -366,7 +394,7 @@ void render(SDL_Renderer *renderer, Controller *controller)
     }
 
     //draw a rectangle at monkey's position
-    SDL_Rect rect = { controller->monkey.x, controller->monkey.y, 100, 70};
+    SDL_Rect rect = { controller->monkey.x, controller->monkey.y, controller->monkey.width, controller->monkey.height};
 
 
     /*
@@ -403,8 +431,8 @@ int main(int argc, char *argv[])
                               SDL_WINDOWPOS_UNDEFINED,           //y position
                               SCREEN_WIDTH,                      //width
                               SCREEN_HEIGHT,                     //height, in pixels
-                              0                                  //flags
-    );
+                              0);
+
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     controller.renderer = renderer;
 
@@ -427,19 +455,27 @@ int main(int argc, char *argv[])
         SDL_Delay(10);
     }
 
+    closeWindow(window, controller);
+    return 0;
+}
 
-    //Free all memory
-    SDL_DestroyTexture(controller.monkeyFrames[0]);
-    SDL_DestroyTexture(controller.monkeyFrames[1]);
-    SDL_DestroyTexture(controller.monkeyFrames[2]);
-    SDL_DestroyTexture(controller.monkeyFrames[3]);
-    SDL_DestroyTexture(controller.ledge_img);
+
+void endGame(){
+    SDL_Quit();
+}
+
+//Free all memory
+void closeWindow(SDL_Window *window, Controller *controller) {
+    SDL_DestroyTexture(controller->monkeyFrames[0]);
+    SDL_DestroyTexture(controller->monkeyFrames[1]);
+    SDL_DestroyTexture(controller->monkeyFrames[2]);
+    SDL_DestroyTexture(controller->monkeyFrames[3]);
+    SDL_DestroyTexture(controller->ledge_img);
 
     // Destroy the window
     SDL_DestroyWindow(window);
-    SDL_DestroyRenderer(renderer);
+    SDL_DestroyRenderer(controller->renderer);
 
     // Clean up
     SDL_Quit();
-    return 0;
 }

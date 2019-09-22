@@ -12,11 +12,13 @@
 typedef struct
 {
     float x, y;
+    int width, height;
     float dx, dy;
-    short life;
+    int dead;
     int onLedge;
 
     int animFrame, facingLeft, slowingDown;
+
 } Monkey;
 
 
@@ -54,9 +56,11 @@ typedef struct
 } Controller;
 
 
+void initScene(Controller *controller);
 void loadGraphics(Controller *controller);
-void move(Controller *controller);
-void collisionDetect(Controller *controller);
 int eventManager(SDL_Window *window, Controller *controller);
 void render(SDL_Renderer *renderer, Controller *controller);
-void init(Controller *controller);
+void move(Controller *controller);
+void collisionDetect(Controller *controller);
+void endGame();
+void closeWindow();
