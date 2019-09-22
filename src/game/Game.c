@@ -151,7 +151,7 @@ void loadGraphics(Controller *controller)
 }
 
 
-void process(Controller *controller)
+void move(Controller *controller)
 {
     //add time
     controller->time++;
@@ -163,19 +163,11 @@ void process(Controller *controller)
 
     if(monkey->dx != 0 && monkey->onLedge && !monkey->slowingDown)
     {
-        if(controller->time % 2 == 0)
+        if(controller->time % 15 == 0)
         {
-            if(monkey->animFrame == 0)
+            if(monkey->animFrame < 3)
             {
-                monkey->animFrame = 1;
-            }
-            else if(monkey->animFrame == 1)
-            {
-                monkey->animFrame = 2;
-            }
-            if(monkey->animFrame == 2)
-            {
-                monkey->animFrame = 3;
+                monkey->animFrame++;
             }
             else
             {
@@ -186,6 +178,7 @@ void process(Controller *controller)
 
     monkey->dy += GRAVITY;
 }
+
 
 void collisionDetect(Controller *controller)
 {
@@ -309,7 +302,7 @@ int eventManager(SDL_Window *window, Controller *controller)
         {
             controller->monkey.dx = -SPEED;
         }
-        controller->monkey.facingLeft = 1;
+        controller->monkey.facingLeft += 1;
         controller->monkey.slowingDown = 0;
     }
 
@@ -337,14 +330,12 @@ int eventManager(SDL_Window *window, Controller *controller)
 
 void render(SDL_Renderer *renderer, Controller *controller)
 {
-    //set the drawing color to blue
-    SDL_SetRenderDrawColor(renderer, 128, 128, 255, 255);
+    //set the drawing color to black
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
 
-    //Clear the screen (to blue)
+    //Clear the screen
     SDL_RenderClear(renderer);
 
-    //set the drawing color to white
-    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 
     for(int i = 0; i < ledgeAmount; i++)
     {
