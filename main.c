@@ -14,5 +14,5 @@ int main(int argc, char *argv[]){
     SDL_Window *window = NULL;
     createWindow(window, &controller);
 
-    initializeGame(window, &controller);
+    initializeGame(window, &controller, 3);
 }

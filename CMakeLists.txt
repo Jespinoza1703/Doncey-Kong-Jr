@@ -14,16 +14,13 @@ link_directories(${PROJECT_SOURCE_DIR}/lib)
 
 
 add_executable(Doncey_Kong_Jr main.c
-        src/entities/players/Monkey.c
-        src/entities/enemies/BlueCrocodile.c
         src/graphics/Menu.c
         src/graphics/Menu.h
-        src/entities/enemies/BlueCrocodile.h
-        src/entities/players/Monkey.h
         src/game/Game.c
         src/game/Game.h
         src/Util.c
-        src/Util.h src/graphics/Loader.c src/graphics/Loader.h)
+        src/Util.h src/entities/Controller.c
+        src/entities/Controller.h)
 
 
 target_link_libraries(Doncey_Kong_Jr -lSDL2 -lSDL2_image)
