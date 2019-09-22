@@ -10,6 +10,7 @@
 
 
 #define ledgeAmount 15
+#define ropeAmount 9
 
 typedef struct
 {
@@ -30,6 +31,11 @@ typedef struct
 
 } Ledge;
 
+typedef struct
+{
+    double x, y, w, h;
+
+} Rope;
 
 typedef struct
 {
@@ -38,10 +44,12 @@ typedef struct
 
     //Ledges
     Ledge ledges[ledgeAmount];
+    Rope ropes[ropeAmount];
 
     //Images
     SDL_Texture *monkeyFrames[5];
     SDL_Texture *livesFrames[4];
+    SDL_Texture *ropeFrames[ropeAmount];
     SDL_Texture *blueCrocoFrames[5];
     SDL_Texture *redCrocoFrames[5];
     SDL_Texture *banana_img;

@@ -166,7 +166,7 @@ void createWindow(SDL_Window *window, Controller *controller){
 }
 
 
-void moveMonkey(Controller *controller)
+void animateMonkey(Controller *controller)
 {
     //add time
     controller->time++;
@@ -210,7 +210,7 @@ void initializeGame(SDL_Window *window, Controller *controller, int lives){
 
         //Render
         render(controller);
-        moveMonkey(controller);
+        animateMonkey(controller);
         collisionDetect(controller);
 
         SDL_Delay(10);

@@ -48,6 +48,15 @@ void initScene(Controller *controller, int screenWidth, int lives){
     controller->ledges[ledgeAmount-6].x = 840;
     controller->ledges[ledgeAmount-6].y = 400;
     controller->ledges[ledgeAmount-6].w = screenWidth*0.2;
+
+    //init ropes
+    for(int i = 0; i < ropeAmount; i++)
+    {
+        controller->ropes[i].w = 50;
+        controller->ropes[i].h = 210;
+        controller->ropes[i].x = 150*i;
+        controller->ropes[i].y = 210;
+    }
 }
 
 
@@ -301,6 +310,86 @@ void loadGraphics(Controller *controller) {
     SDL_FreeSurface(surface);
 
 
+    surface = IMG_Load("../images/ropes/rope1.png");
+    if (surface == NULL) {
+        printf("Cannot find rope1.png\n\n");
+        SDL_Quit();
+        exit(1);
+    }
+    controller->ropeFrames[0] = SDL_CreateTextureFromSurface(controller->renderer, surface);
+    SDL_FreeSurface(surface);
+
+    surface = IMG_Load("../images/ropes/rope2.png");
+    if (surface == NULL) {
+        printf("Cannot find rope2.png\n\n");
+        SDL_Quit();
+        exit(1);
+    }
+    controller->ropeFrames[1] = SDL_CreateTextureFromSurface(controller->renderer, surface);
+    SDL_FreeSurface(surface);
+
+    surface = IMG_Load("../images/ropes/rope3.png");
+    if (surface == NULL) {
+        printf("Cannot find rope3.png\n\n");
+        SDL_Quit();
+        exit(1);
+    }
+    controller->ropeFrames[2] = SDL_CreateTextureFromSurface(controller->renderer, surface);
+    SDL_FreeSurface(surface);
+
+    surface = IMG_Load("../images/ropes/rope4.png");
+    if (surface == NULL) {
+        printf("Cannot find rope4.png\n\n");
+        SDL_Quit();
+        exit(1);
+    }
+    controller->ropeFrames[3] = SDL_CreateTextureFromSurface(controller->renderer, surface);
+    SDL_FreeSurface(surface);
+
+    surface = IMG_Load("../images/ropes/rope5.png");
+    if (surface == NULL) {
+        printf("Cannot find rope5.png\n\n");
+        SDL_Quit();
+        exit(1);
+    }
+    controller->ropeFrames[4] = SDL_CreateTextureFromSurface(controller->renderer, surface);
+    SDL_FreeSurface(surface);
+
+    surface = IMG_Load("../images/ropes/rope6.png");
+    if (surface == NULL) {
+        printf("Cannot find rope6.png\n\n");
+        SDL_Quit();
+        exit(1);
+    }
+    controller->ropeFrames[5] = SDL_CreateTextureFromSurface(controller->renderer, surface);
+    SDL_FreeSurface(surface);
+
+    surface = IMG_Load("../images/ropes/rope7.png");
+    if (surface == NULL) {
+        printf("Cannot find rope7.png\n\n");
+        SDL_Quit();
+        exit(1);
+    }
+    controller->ropeFrames[6] = SDL_CreateTextureFromSurface(controller->renderer, surface);
+    SDL_FreeSurface(surface);
+
+    surface = IMG_Load("../images/ropes/rope8.png");
+    if (surface == NULL) {
+        printf("Cannot find rope8.png\n\n");
+        SDL_Quit();
+        exit(1);
+    }
+    controller->ropeFrames[7] = SDL_CreateTextureFromSurface(controller->renderer, surface);
+    SDL_FreeSurface(surface);
+
+    surface = IMG_Load("../images/ropes/rope9.png");
+    if (surface == NULL) {
+        printf("Cannot find rope9.png\n\n");
+        SDL_Quit();
+        exit(1);
+    }
+    controller->ropeFrames[8] = SDL_CreateTextureFromSurface(controller->renderer, surface);
+    SDL_FreeSurface(surface);
 }
 
 

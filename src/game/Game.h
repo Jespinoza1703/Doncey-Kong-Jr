@@ -10,8 +10,8 @@
 
 int eventManager(SDL_Window *window, Controller *controller);
 void render(Controller *controller);
-void moveMonkey(Controller *controller);
-void initializeGame(SDL_Window *window, Controller *controller, int lives);
 void createWindow(SDL_Window *window, Controller *controller);
+void animateMonkey(Controller *controller);
+void initializeGame(SDL_Window *window, Controller *controller, int lives);
 void endGame(SDL_Window *window, Controller *controller, int win);
 
