@@ -53,8 +53,11 @@ typedef struct
     //Renderer
     SDL_Renderer *renderer;
 
+    int end;
+
 } Controller;
 
+void initializeGame();
 void createWindow(SDL_Window *window, Controller *controller);
 void initScene(Controller *controller);
 void loadGraphics(Controller *controller);
@@ -62,5 +65,5 @@ int eventManager(SDL_Window *window, Controller *controller);
 void render(Controller *controller);
 void move(Controller *controller);
 void collisionDetect(Controller *controller);
-void endGame(SDL_Window *window, Controller *controller);
+void endGame(SDL_Window *window, Controller *controller, int win);
 void closeWindow(SDL_Window *window, Controller *controller);

@@ -6,6 +6,7 @@ void createWindow(SDL_Window *window, Controller *controller){
 
     SDL_Init(SDL_INIT_EVERYTHING);
     srandom((int)time(NULL));
+    controller->end = 0;
 
 //Create window
     window = SDL_CreateWindow("controller Window",               //Title
@@ -291,10 +292,9 @@ void collisionDetect(Controller *controller)
 int eventManager(SDL_Window *window, Controller *controller)
 {
     SDL_Event event;
-    int finish = 0;
 
     if (controller->monkey.dead == 1){
-        endGame(window, controller);
+        endGame(window, controller, 1);
     }
 
     while(SDL_PollEvent(&event))
@@ -308,7 +308,7 @@ int eventManager(SDL_Window *window, Controller *controller)
                 {
                     SDL_DestroyWindow(window);
                     window = NULL;
-                    finish = 1;
+                    controller->end = 1;
                 }
             }
                 break;
@@ -317,7 +317,7 @@ int eventManager(SDL_Window *window, Controller *controller)
                 switch(event.key.keysym.sym)
                 {
                     case SDLK_ESCAPE:
-                        finish = 1;
+                        controller->end = 1;
                         break;
                     case SDLK_UP:
                         if(controller->monkey.onLedge)
@@ -331,7 +331,7 @@ int eventManager(SDL_Window *window, Controller *controller)
                 break;
             case SDL_QUIT:
                 //quit out of the controller
-                finish = 1;
+                controller->end = 1;
                 break;
         }
     }
@@ -387,12 +387,12 @@ int eventManager(SDL_Window *window, Controller *controller)
             }
         }
         else{
-            endGame(window, controller);
+            monkey->dead = 1;
         }
 
     }
 
-    return finish;
+    return controller->end;
 }
 
 void render(Controller *controller)
@@ -412,8 +412,10 @@ void render(Controller *controller)
     }
 
     //draw a rectangle at monkey's position
-    SDL_Rect rect = { controller->monkey.x, controller->monkey.y, controller->monkey.width, controller->monkey.height};
+    SDL_Rect rect = {controller->monkey.x, controller->monkey.y, controller->monkey.width, controller->monkey.height};
 
+    SDL_Rect donkeyKRect = {10, 110, 141, 85};
+    SDL_RenderCopy(controller->renderer, controller->donkeyK_img, NULL, &donkeyKRect);
 
     /*
      * SDL_RenderCopyEx:
@@ -428,7 +430,6 @@ void render(Controller *controller)
                      NULL, &rect, 0, NULL, (controller->monkey.facingLeft == 0));
 
 
-
     //Show on the screen
     SDL_RenderPresent(controller->renderer);
 }
@@ -436,8 +437,16 @@ void render(Controller *controller)
 
 
 
-void endGame(SDL_Window *window, Controller *controller){
-    SDL_Quit();
+void endGame(SDL_Window *window, Controller *controller, int win){
+
+    if(win == 1){
+        controller->end = 1;
+        initializeGame();
+    }
+    else{
+        controller->end = 1;
+    }
+
 }
 
 //Free all memory
@@ -451,7 +460,27 @@ void closeWindow(SDL_Window *window, Controller *controller) {
     // Destroy the window
     SDL_DestroyWindow(window);
     SDL_DestroyRenderer(controller->renderer);
+}
 
-    // Clean up
-    SDL_Quit();
+void initializeGame(){
+    Controller controller;
+    SDL_Window *window = NULL;
+    createWindow(window, &controller);
+
+    loadGraphics(&controller);
+
+    //Event loop
+    while(controller.end != 1)
+    {
+        eventManager(window, &controller);
+
+        //Render
+        render(&controller);
+        move(&controller);
+        collisionDetect(&controller);
+
+        SDL_Delay(10);
+    }
+
+    closeWindow(window, &controller);
 }
