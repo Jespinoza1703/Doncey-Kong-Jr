@@ -55,7 +55,7 @@ void initScene(Controller *controller){
 
     controller->ledges[ledgeAmount-4].x = 200;
     controller->ledges[ledgeAmount-4].y = 330;
-    controller->ledges[ledgeAmount-4].w = SCREEN_WIDTH*0.81;
+    controller->ledges[ledgeAmount-4].w = SCREEN_WIDTH*0.11;
 
     controller->ledges[ledgeAmount-5].x = 200;
     controller->ledges[ledgeAmount-5].y = 470;
@@ -114,6 +114,15 @@ void loadGraphics(Controller *controller)
     controller->monkeyFrames[3] = SDL_CreateTextureFromSurface(controller->renderer, surface);
     SDL_FreeSurface(surface);
 
+
+    surface = IMG_Load("../images/jumping.png");
+    if (surface == NULL){
+        printf("Cannot find jumping.png\n\n");
+        SDL_Quit();
+        exit(1);
+    }
+    controller->monkeyFrames[4] = SDL_CreateTextureFromSurface(controller->renderer, surface);
+    SDL_FreeSurface(surface);
 
 
     surface = IMG_Load("../images/background.png");
@@ -211,7 +220,7 @@ void move(Controller *controller)
     {
         if(controller->time % 15 == 0)
         {
-            if(monkey->animFrame < 3)
+            if(monkey->animFrame < 4)
             {
                 monkey->animFrame++;
             }
@@ -342,6 +351,7 @@ int eventManager(SDL_Window *window, Controller *controller)
     if(state[SDL_SCANCODE_UP])
     {
         monkey->dy -= 0.2f;
+        monkey->animFrame = 4;
     }
 
     //Walking
@@ -403,6 +413,8 @@ void render(Controller *controller)
     //Clear the screen
     SDL_RenderClear(controller->renderer);
 
+    SDL_Rect bgRect = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
+    SDL_RenderCopy(controller->renderer, controller->background_img, NULL, &bgRect);
 
     for(int i = 0; i < ledgeAmount; i++)
     {
@@ -441,6 +453,7 @@ void endGame(SDL_Window *window, Controller *controller, int win){
 
     if(win == 1){
         controller->end = 1;
+        closeWindow(window, controller);
         initializeGame();
     }
     else{

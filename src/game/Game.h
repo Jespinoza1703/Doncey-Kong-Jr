@@ -3,8 +3,8 @@
 #include <stdio.h>
 #include <time.h>
 
-#define SCREEN_WIDTH 1080
-#define SCREEN_HEIGHT 768
+#define SCREEN_WIDTH 980
+#define SCREEN_HEIGHT 668
 #define SPEED 6
 #define GRAVITY  0.32f
 #define ledgeAmount 15
@@ -38,7 +38,7 @@ typedef struct
     Ledge ledges[ledgeAmount];
 
     //Images
-    SDL_Texture *monkeyFrames[10];
+    SDL_Texture *monkeyFrames[5];
     SDL_Texture *background_img;
     SDL_Texture *blueCroco_img;
     SDL_Texture *redCroco_img;
@@ -67,3 +67,4 @@ void move(Controller *controller);
 void collisionDetect(Controller *controller);
 void endGame(SDL_Window *window, Controller *controller, int win);
 void closeWindow(SDL_Window *window, Controller *controller);
+
