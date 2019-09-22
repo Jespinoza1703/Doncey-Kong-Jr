@@ -1,6 +1,24 @@
 #include "Game.h"
 
 
+
+void createWindow(SDL_Window *window, Controller *controller){
+
+    SDL_Init(SDL_INIT_EVERYTHING);
+    srandom((int)time(NULL));
+
+//Create window
+    window = SDL_CreateWindow("controller Window",               //Title
+                              SDL_WINDOWPOS_UNDEFINED,           //x position
+                              SDL_WINDOWPOS_UNDEFINED,           //y position
+                              SCREEN_WIDTH,                      //width
+                              SCREEN_HEIGHT,                     //height, in pixels
+                              0);
+
+    controller->renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+}
+
+
 void initScene(Controller *controller){
 
     controller->monkey.x = 320-40;
@@ -209,22 +227,21 @@ void move(Controller *controller)
 
 void collisionDetect(Controller *controller)
 {
+    Monkey *monkey = &controller->monkey;
     //Check for collision with any ledges (brick blocks)
     for(int i = 0; i < ledgeAmount; i++)
     {
-        float mw = controller->monkey.width, mh = controller->monkey.height;
-        float mx = controller->monkey.x, my = controller->monkey.y;
-        float bx = controller->ledges[i].x, by = controller->ledges[i].y;
-        float bw = controller->ledges[i].w, bh = controller->ledges[i].h;
+        float ledgeX = controller->ledges[i].x, ledgeY = controller->ledges[i].y;
+        float ledgeWidth = controller->ledges[i].w, ledgeHeight = controller->ledges[i].h;
 
-        if(mx+mw/2 > bx && mx+mw/2 < bx+bw)
+        if(monkey->x+monkey->width/2 > ledgeX && monkey->x+monkey->width/2 < ledgeX+ledgeWidth)
         {
             //are we bumping our head?
-            if(my < by+bh && my > by && controller->monkey.dy < 0)
+            if(monkey->y < ledgeY+ledgeHeight && monkey->y > ledgeY && controller->monkey.dy < 0)
             {
                 //correct y
-                controller->monkey.y = by+bh;
-                my = by+bh;
+                controller->monkey.y = ledgeY+ledgeHeight;
+                monkey->y = ledgeY+ledgeHeight;
 
                 //bumped our head, stop any jump velocity
                 controller->monkey.dy = 0;
@@ -232,14 +249,14 @@ void collisionDetect(Controller *controller)
             }
         }
 
-        if(mx+mw > bx && mx<bx+bw)
+        if(monkey->x+monkey->width > ledgeX && monkey->x<ledgeX+ledgeWidth)
         {
             //are we landing on the ledge
-            if(my+mh > by && my < by && controller->monkey.dy > 0)
+            if(monkey->y+monkey->height > ledgeY && monkey->y < ledgeY && controller->monkey.dy > 0)
             {
                 //correct y
-                controller->monkey.y = by-mh;
-                my = by-mh;
+                controller->monkey.y = ledgeY-monkey->height;
+                monkey->y = ledgeY-monkey->height;
 
                 //landed on this ledge, stop any jump velocity
                 controller->monkey.dy = 0;
@@ -247,23 +264,23 @@ void collisionDetect(Controller *controller)
             }
         }
 
-        if(my+mh > by && my<by+bh)
+        if(monkey->y+monkey->height > ledgeY && monkey->y<ledgeY+ledgeHeight)
         {
             //rubbing against right edge
-            if(mx < bx+bw && mx+mw > bx+bw && controller->monkey.dx < 0)
+            if(monkey->x < ledgeX+ledgeWidth && monkey->x+monkey->width > ledgeX+ledgeWidth && controller->monkey.dx < 0)
             {
                 //correct x
-                controller->monkey.x = bx+bw;
-                mx = bx+bw;
+                controller->monkey.x = ledgeX+ledgeWidth;
+                monkey->x = ledgeX+ledgeWidth;
 
                 controller->monkey.dx = 0;
             }
                 //rubbing against left edge
-            else if(mx+mw > bx && mx < bx && controller->monkey.dx > 0)
+            else if(monkey->x+monkey->width > ledgeX && monkey->x < ledgeX && controller->monkey.dx > 0)
             {
                 //correct x
-                controller->monkey.x = bx-mw;
-                mx = bx-mw;
+                controller->monkey.x = ledgeX-monkey->width;
+                monkey->x = ledgeX-monkey->width;
 
                 controller->monkey.dx = 0;
             }
@@ -277,11 +294,12 @@ int eventManager(SDL_Window *window, Controller *controller)
     int finish = 0;
 
     if (controller->monkey.dead == 1){
-        endGame();
+        endGame(window, controller);
     }
 
     while(SDL_PollEvent(&event))
     {
+
         switch(event.type)
         {
             case SDL_WINDOWEVENT_CLOSE:
@@ -369,7 +387,7 @@ int eventManager(SDL_Window *window, Controller *controller)
             }
         }
         else{
-            endGame();
+            endGame(window, controller);
         }
 
     }
@@ -377,20 +395,20 @@ int eventManager(SDL_Window *window, Controller *controller)
     return finish;
 }
 
-void render(SDL_Renderer *renderer, Controller *controller)
+void render(Controller *controller)
 {
     //set the drawing color to black
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
+    SDL_SetRenderDrawColor(controller->renderer, 0, 0, 0, 0);
 
     //Clear the screen
-    SDL_RenderClear(renderer);
+    SDL_RenderClear(controller->renderer);
 
 
     for(int i = 0; i < ledgeAmount; i++)
     {
         SDL_Rect ledgeRect = { controller->ledges[i].x, controller->ledges[i].y,
                                controller->ledges[i].w, controller->ledges[i].h };
-        SDL_RenderCopy(renderer, controller->ledge_img, NULL, &ledgeRect);
+        SDL_RenderCopy(controller->renderer, controller->ledge_img, NULL, &ledgeRect);
     }
 
     //draw a rectangle at monkey's position
@@ -406,61 +424,19 @@ void render(SDL_Renderer *renderer, Controller *controller)
      * arg5 point (center)
      * arg6 renderFlip
      */
-    SDL_RenderCopyEx(renderer, controller->monkeyFrames[controller->monkey.animFrame],
+    SDL_RenderCopyEx(controller->renderer, controller->monkeyFrames[controller->monkey.animFrame],
                      NULL, &rect, 0, NULL, (controller->monkey.facingLeft == 0));
 
 
 
     //Show on the screen
-    SDL_RenderPresent(renderer);
-}
-
-int main(int argc, char *argv[])
-{
-    Controller controller;
-    SDL_Window *window = NULL;
-    SDL_Renderer *renderer = NULL;
-
-    SDL_Init(SDL_INIT_EVERYTHING);
-
-    srandom((int)time(NULL));
-
-    //Create window
-    window = SDL_CreateWindow("controller Window",               //Title
-                              SDL_WINDOWPOS_UNDEFINED,           //x position
-                              SDL_WINDOWPOS_UNDEFINED,           //y position
-                              SCREEN_WIDTH,                      //width
-                              SCREEN_HEIGHT,                     //height, in pixels
-                              0);
-
-    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-    controller.renderer = renderer;
-
-    loadGraphics(&controller);
-
-    //Enter loop
-    int finish = 0;
-
-    //Event loop
-    while(!finish)
-    {
-        finish = eventManager(window, &controller);
-
-        move(&controller);
-        collisionDetect(&controller);
-
-        //Render
-        render(renderer, &controller);
-
-        SDL_Delay(10);
-    }
-
-    closeWindow(window, controller);
-    return 0;
+    SDL_RenderPresent(controller->renderer);
 }
 
 
-void endGame(){
+
+
+void endGame(SDL_Window *window, Controller *controller){
     SDL_Quit();
 }
 

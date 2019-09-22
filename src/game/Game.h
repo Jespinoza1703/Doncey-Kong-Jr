@@ -55,12 +55,12 @@ typedef struct
 
 } Controller;
 
-
+void createWindow(SDL_Window *window, Controller *controller);
 void initScene(Controller *controller);
 void loadGraphics(Controller *controller);
 int eventManager(SDL_Window *window, Controller *controller);
-void render(SDL_Renderer *renderer, Controller *controller);
+void render(Controller *controller);
 void move(Controller *controller);
 void collisionDetect(Controller *controller);
-void endGame();
-void closeWindow();
+void endGame(SDL_Window *window, Controller *controller);
+void closeWindow(SDL_Window *window, Controller *controller);
