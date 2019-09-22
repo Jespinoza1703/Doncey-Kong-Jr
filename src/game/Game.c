@@ -118,9 +118,15 @@ void render(Controller *controller)
 
     for(int i = 0; i < ledgeAmount; i++)
     {
-        SDL_Rect ledgeRect = { controller->ledges[i].x, controller->ledges[i].y,
-                               controller->ledges[i].w, controller->ledges[i].h };
+        SDL_Rect ledgeRect = {controller->ledges[i].x, controller->ledges[i].y,
+                               controller->ledges[i].w, controller->ledges[i].h};
         SDL_RenderCopy(controller->renderer, controller->ledge_img, NULL, &ledgeRect);
+    }
+    for(int i = 0; i < ropeAmount; i++)
+    {
+        SDL_Rect ropeRect = { controller->ropes[i].x, controller->ropes[i].y,
+                              controller->ropes[i].w, controller->ropes[i].h};
+        SDL_RenderCopy(controller->renderer, controller->ropeFrames[i], NULL, &ropeRect);
     }
 
     //draw a rectangle at monkey's position
@@ -142,6 +148,7 @@ void render(Controller *controller)
     SDL_Rect livesRect = {800, 10, 150, 46};
     SDL_RenderCopy(controller->renderer, controller->livesFrames[controller->monkey.lives],
             NULL, &livesRect);
+
 
     //Show on the screen
     SDL_RenderPresent(controller->renderer);

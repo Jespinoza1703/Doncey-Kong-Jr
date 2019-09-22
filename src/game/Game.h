@@ -5,7 +5,7 @@
 #define SCREEN_WIDTH 980
 #define SCREEN_HEIGHT 668
 #define SPEED 6
-#define GRAVITY  0.32f
+#define GRAVITY  0.35f
 
 
 int eventManager(SDL_Window *window, Controller *controller);

@@ -29,8 +29,8 @@ void initScene(Controller *controller, int screenWidth, int lives){
     controller->ledges[ledgeAmount-1].y = 195;
     controller->ledges[ledgeAmount-1].w = screenWidth*0.6;
 
-    controller->ledges[ledgeAmount-2].x = 615;
-    controller->ledges[ledgeAmount-2].y = 225;
+    controller->ledges[ledgeAmount-2].x = 590;
+    controller->ledges[ledgeAmount-2].y = 160;
     controller->ledges[ledgeAmount-2].w = screenWidth*0.25;
 
     controller->ledges[ledgeAmount-3].x = 250;
@@ -52,9 +52,9 @@ void initScene(Controller *controller, int screenWidth, int lives){
     //init ropes
     for(int i = 0; i < ropeAmount; i++)
     {
-        controller->ropes[i].w = 50;
-        controller->ropes[i].h = 210;
+        controller->ropes[i].w = 35;
         controller->ropes[i].x = 150*i;
+        controller->ropes[i].h = 272;
         controller->ropes[i].y = 210;
     }
 }
@@ -382,14 +382,6 @@ void loadGraphics(Controller *controller) {
     controller->ropeFrames[7] = SDL_CreateTextureFromSurface(controller->renderer, surface);
     SDL_FreeSurface(surface);
 
-    surface = IMG_Load("../images/ropes/rope9.png");
-    if (surface == NULL) {
-        printf("Cannot find rope9.png\n\n");
-        SDL_Quit();
-        exit(1);
-    }
-    controller->ropeFrames[8] = SDL_CreateTextureFromSurface(controller->renderer, surface);
-    SDL_FreeSurface(surface);
 }
 
 
@@ -414,6 +406,14 @@ void closeWindow(SDL_Window *window, Controller *controller) {
     SDL_DestroyTexture(controller->livesFrames[1]);
     SDL_DestroyTexture(controller->livesFrames[2]);
     SDL_DestroyTexture(controller->livesFrames[3]);
+    SDL_DestroyTexture(controller->ropeFrames[0]);
+    SDL_DestroyTexture(controller->ropeFrames[1]);
+    SDL_DestroyTexture(controller->ropeFrames[2]);
+    SDL_DestroyTexture(controller->ropeFrames[3]);
+    SDL_DestroyTexture(controller->ropeFrames[4]);
+    SDL_DestroyTexture(controller->ropeFrames[5]);
+    SDL_DestroyTexture(controller->ropeFrames[6]);
+    SDL_DestroyTexture(controller->ropeFrames[7]);
     SDL_DestroyTexture(controller->banana_img);
     SDL_DestroyTexture(controller->mango_img);
     SDL_DestroyTexture(controller->apple_img);

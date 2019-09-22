@@ -10,7 +10,7 @@
 
 
 #define ledgeAmount 15
-#define ropeAmount 9
+#define ropeAmount 8
 
 typedef struct
 {
