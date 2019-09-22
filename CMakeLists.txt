@@ -23,7 +23,7 @@ add_executable(Doncey_Kong_Jr main.c
         src/game/Game.c
         src/game/Game.h
         src/Util.c
-        src/Util.h)
+        src/Util.h src/graphics/Loader.c src/graphics/Loader.h)
 
 
 target_link_libraries(Doncey_Kong_Jr -lSDL2 -lSDL2_image)

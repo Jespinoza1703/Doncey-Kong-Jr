@@ -57,7 +57,7 @@ typedef struct
 
 } Controller;
 
-void initializeGame();
+void initializeGame(SDL_Window *window, Controller *controller);
 void createWindow(SDL_Window *window, Controller *controller);
 void initScene(Controller *controller);
 void loadGraphics(Controller *controller);

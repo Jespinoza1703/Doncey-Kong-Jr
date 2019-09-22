@@ -66,145 +66,6 @@ void initScene(Controller *controller){
     controller->ledges[ledgeAmount-6].w = SCREEN_WIDTH*0.2;
 }
 
-void loadGraphics(Controller *controller)
-{
-    //Load images and create rendering textures from them
-    SDL_Surface *surface = NULL;
-
-    /*
-     * In case images can't be found with the specified path
-     */
-    surface = IMG_Load("../images/jrStanding.png");
-    if (surface == NULL){
-        printf("Cannot find jrStanding.png\n\n");
-        SDL_Quit();
-        exit(1);
-    }
-    //Assigns images
-    controller->monkeyFrames[0] = SDL_CreateTextureFromSurface(controller->renderer, surface);
-    SDL_FreeSurface(surface);
-
-
-    surface = IMG_Load("../images/jrWalkLeft.png");
-    if (surface == NULL){
-        printf("Cannot find jrWalkLeft.png\n\n");
-        SDL_Quit();
-        exit(1);
-    }
-    controller->monkeyFrames[1] = SDL_CreateTextureFromSurface(controller->renderer, surface);
-    SDL_FreeSurface(surface);
-
-
-    surface = IMG_Load("../images/jrWalkLeft2.png");
-    if (surface == NULL){
-        printf("Cannot find jrWalkLeft2.png\n\n");
-        SDL_Quit();
-        exit(1);
-    }
-    controller->monkeyFrames[2] = SDL_CreateTextureFromSurface(controller->renderer, surface);
-    SDL_FreeSurface(surface);
-
-
-    surface = IMG_Load("../images/jrWalkLeft3.png");
-    if (surface == NULL){
-        printf("Cannot find jrWalkLeft3.png\n\n");
-        SDL_Quit();
-        exit(1);
-    }
-    controller->monkeyFrames[3] = SDL_CreateTextureFromSurface(controller->renderer, surface);
-    SDL_FreeSurface(surface);
-
-
-    surface = IMG_Load("../images/jumping.png");
-    if (surface == NULL){
-        printf("Cannot find jumping.png\n\n");
-        SDL_Quit();
-        exit(1);
-    }
-    controller->monkeyFrames[4] = SDL_CreateTextureFromSurface(controller->renderer, surface);
-    SDL_FreeSurface(surface);
-
-
-    surface = IMG_Load("../images/background.png");
-    if (surface == NULL) {
-        printf("Cannot find background.png\n\n");
-        SDL_Quit();
-        exit(1);
-    }
-    controller->background_img = SDL_CreateTextureFromSurface(controller->renderer, surface);
-    SDL_FreeSurface(surface);
-
-
-    surface = IMG_Load("../images/banana.png");
-    if (surface == NULL) {
-        printf("Cannot find banana.png\n\n");
-        SDL_Quit();
-        exit(1);
-    }
-    controller->banana_img = SDL_CreateTextureFromSurface(controller->renderer, surface);
-    SDL_FreeSurface(surface);
-
-    surface = IMG_Load("../images/mango.png");
-    if (surface == NULL) {
-        printf("Cannot find mango.png\n\n");
-        SDL_Quit();
-        exit(1);
-    }
-    controller->mango_img = SDL_CreateTextureFromSurface(controller->renderer, surface);
-    SDL_FreeSurface(surface);
-
-
-    surface = IMG_Load("../images/apple.png");
-    if (surface == NULL) {
-        printf("Cannot find apple.png\n\n");
-        SDL_Quit();
-        exit(1);
-    }
-    controller->apple_img = SDL_CreateTextureFromSurface(controller->renderer, surface);
-    SDL_FreeSurface(surface);
-
-
-    surface = IMG_Load("../images/blueCroco.png");
-    if (surface == NULL) {
-        printf("Cannot find blueCroco.png\n\n");
-        SDL_Quit();
-        exit(1);
-    }
-    controller->blueCroco_img = SDL_CreateTextureFromSurface(controller->renderer, surface);
-    SDL_FreeSurface(surface);
-
-
-    surface = IMG_Load("../images/redCroco.png");
-    if (surface == NULL) {
-        printf("Cannot find redCroco.png\n\n");
-        SDL_Quit();
-        exit(1);
-    }
-    controller->redCroco_img = SDL_CreateTextureFromSurface(controller->renderer, surface);
-    SDL_FreeSurface(surface);
-
-
-    surface = IMG_Load("../images/ledge.png");
-    if (surface == NULL) {
-        printf("Cannot find ledge.png\n\n");
-        SDL_Quit();
-        exit(1);
-    }
-    controller->ledge_img = SDL_CreateTextureFromSurface(controller->renderer, surface);
-    SDL_FreeSurface(surface);
-
-    surface = IMG_Load("../images/donkey.png");
-    if (surface == NULL) {
-        printf("Cannot find donkey.png\n\n");
-        SDL_Quit();
-        exit(1);
-    }
-    controller->donkeyK_img = SDL_CreateTextureFromSurface(controller->renderer, surface);
-    SDL_FreeSurface(surface);
-
-    initScene(controller);
-}
-
 
 void move(Controller *controller)
 {
@@ -303,7 +164,7 @@ int eventManager(SDL_Window *window, Controller *controller)
     SDL_Event event;
 
     if (controller->monkey.dead == 1){
-        endGame(window, controller, 1);
+        endGame(window, controller, 0);
     }
 
     while(SDL_PollEvent(&event))
@@ -413,9 +274,6 @@ void render(Controller *controller)
     //Clear the screen
     SDL_RenderClear(controller->renderer);
 
-    SDL_Rect bgRect = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
-    SDL_RenderCopy(controller->renderer, controller->background_img, NULL, &bgRect);
-
     for(int i = 0; i < ledgeAmount; i++)
     {
         SDL_Rect ledgeRect = { controller->ledges[i].x, controller->ledges[i].y,
@@ -452,12 +310,10 @@ void render(Controller *controller)
 void endGame(SDL_Window *window, Controller *controller, int win){
 
     if(win == 1){
-        controller->end = 1;
         closeWindow(window, controller);
-        initializeGame();
     }
     else{
-        controller->end = 1;
+        if(controller->time % 50 == 0) initializeGame(window, controller);
     }
 
 }
@@ -475,22 +331,19 @@ void closeWindow(SDL_Window *window, Controller *controller) {
     SDL_DestroyRenderer(controller->renderer);
 }
 
-void initializeGame(){
-    Controller controller;
-    SDL_Window *window = NULL;
-    createWindow(window, &controller);
+void initializeGame(SDL_Window *window, Controller *controller){
 
-    loadGraphics(&controller);
+    loadGraphics(controller);
 
     //Event loop
-    while(controller.end != 1)
+    while(controller->end != 1)
     {
-        eventManager(window, &controller);
+        eventManager(window, controller);
 
         //Render
-        render(&controller);
-        move(&controller);
-        collisionDetect(&controller);
+        render(controller);
+        move(controller);
+        collisionDetect(controller);
 
         SDL_Delay(10);
     }
