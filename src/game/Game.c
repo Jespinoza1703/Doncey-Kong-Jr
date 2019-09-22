@@ -17,17 +17,31 @@ void init(Controller *controller){
     //init ledges
     for(int i = 0; i < ledgeAmount; i++)
     {
-        controller->ledges[i].w = 256;
-        controller->ledges[i].h = 64;
-        controller->ledges[i].x = i*256;
-        controller->ledges[i].y = 400;
+        controller->ledges[i].h = 25;
     }
-    controller->ledges[ledgeAmount-1].x = 590;
-    controller->ledges[ledgeAmount-1].y = 200;
+    controller->ledges[ledgeAmount-1].x = 10;
+    controller->ledges[ledgeAmount-1].y = 195;
+    controller->ledges[ledgeAmount-1].w = SCREEN_WIDTH*0.6;
 
-    controller->ledges[ledgeAmount-2].x = 350;
-    controller->ledges[ledgeAmount-2].y = 350;
+    controller->ledges[ledgeAmount-2].x = 615;
+    controller->ledges[ledgeAmount-2].y = 225;
+    controller->ledges[ledgeAmount-2].w = SCREEN_WIDTH*0.25;
 
+    controller->ledges[ledgeAmount-3].x = 250;
+    controller->ledges[ledgeAmount-3].y = 100;
+    controller->ledges[ledgeAmount-3].w = SCREEN_WIDTH*0.08;
+
+    controller->ledges[ledgeAmount-4].x = 200;
+    controller->ledges[ledgeAmount-4].y = 330;
+    controller->ledges[ledgeAmount-4].w = SCREEN_WIDTH*0.11;
+
+    controller->ledges[ledgeAmount-5].x = 200;
+    controller->ledges[ledgeAmount-5].y = 470;
+    controller->ledges[ledgeAmount-5].w = SCREEN_WIDTH*0.17;
+
+    controller->ledges[ledgeAmount-6].x = 840;
+    controller->ledges[ledgeAmount-6].y = 400;
+    controller->ledges[ledgeAmount-6].w = SCREEN_WIDTH*0.2;
 }
 
 void loadGraphics(Controller *controller)
@@ -145,9 +159,16 @@ void loadGraphics(Controller *controller)
     controller->ledge_img = SDL_CreateTextureFromSurface(controller->renderer, surface);
     SDL_FreeSurface(surface);
 
+    surface = IMG_Load("../images/donkey.png");
+    if (surface == NULL) {
+        printf("Cannot find donkey.png\n\n");
+        SDL_Quit();
+        exit(1);
+    }
+    controller->donkeyK_img = SDL_CreateTextureFromSurface(controller->renderer, surface);
+    SDL_FreeSurface(surface);
 
     init(controller);
-
 }
 
 
@@ -171,7 +192,7 @@ void move(Controller *controller)
             }
             else
             {
-                monkey->animFrame = 0;
+                monkey->animFrame = 1;
             }
         }
     }
@@ -185,7 +206,7 @@ void collisionDetect(Controller *controller)
     //Check for collision with any ledges (brick blocks)
     for(int i = 0; i < ledgeAmount; i++)
     {
-        float mw = 25, mh = 16;
+        float mw = 105, mh = 70;
         float mx = controller->monkey.x, my = controller->monkey.y;
         float bx = controller->ledges[i].x, by = controller->ledges[i].y;
         float bw = controller->ledges[i].w, bh = controller->ledges[i].h;
@@ -291,7 +312,7 @@ int eventManager(SDL_Window *window, Controller *controller)
     const Uint8 *state = SDL_GetKeyboardState(NULL);
     if(state[SDL_SCANCODE_UP])
     {
-        controller->monkey.dy -= 0.20;
+        controller->monkey.dy -= 0.2f;
     }
 
     //Walking
@@ -341,11 +362,22 @@ void render(SDL_Renderer *renderer, Controller *controller)
     {
         SDL_Rect ledgeRect = { controller->ledges[i].x, controller->ledges[i].y,
                                controller->ledges[i].w, controller->ledges[i].h };
-        SDL_RenderCopy(renderer, controller->ledge, NULL, &ledgeRect);
+        SDL_RenderCopy(renderer, controller->ledge_img, NULL, &ledgeRect);
     }
 
     //draw a rectangle at monkey's position
-    SDL_Rect rect = { controller->monkey.x, controller->monkey.y, 105, 70};
+    SDL_Rect rect = { controller->monkey.x, controller->monkey.y, 100, 70};
+
+
+    /*
+     * SDL_RenderCopyEx:
+     * arg0 renderer
+     * arg1 texture
+     * arg2, arg3 rect
+     * arg4 angle
+     * arg5 point (center)
+     * arg6 renderFlip
+     */
     SDL_RenderCopyEx(renderer, controller->monkeyFrames[controller->monkey.animFrame],
                      NULL, &rect, 0, NULL, (controller->monkey.facingLeft == 0));
 
@@ -384,25 +416,24 @@ int main(int argc, char *argv[])
     //Event loop
     while(!finish)
     {
-        //Check for events
         finish = eventManager(window, &controller);
 
-        process(&controller);
+        move(&controller);
         collisionDetect(&controller);
 
-        //Render display
+        //Render
         render(renderer, &controller);
 
         SDL_Delay(10);
     }
 
 
-    //Shutdown controller and unload all memory
+    //Free all memory
     SDL_DestroyTexture(controller.monkeyFrames[0]);
     SDL_DestroyTexture(controller.monkeyFrames[1]);
     SDL_DestroyTexture(controller.monkeyFrames[2]);
     SDL_DestroyTexture(controller.monkeyFrames[3]);
-    SDL_DestroyTexture(controller.ledge);
+    SDL_DestroyTexture(controller.ledge_img);
 
     // Destroy the window
     SDL_DestroyWindow(window);

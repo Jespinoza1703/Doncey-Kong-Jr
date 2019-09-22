@@ -22,7 +22,7 @@ typedef struct
 
 typedef struct
 {
-    int x, y, w, h;
+    double x, y, w, h;
 
 } Ledge;
 
@@ -37,7 +37,6 @@ typedef struct
 
     //Images
     SDL_Texture *monkeyFrames[10];
-    SDL_Texture *ledge;
     SDL_Texture *background_img;
     SDL_Texture *blueCroco_img;
     SDL_Texture *redCroco_img;
@@ -45,6 +44,7 @@ typedef struct
     SDL_Texture *mango_img;
     SDL_Texture *apple_img;
     SDL_Texture *ledge_img;
+    SDL_Texture *donkeyK_img;
 
     int time;
 
@@ -55,7 +55,7 @@ typedef struct
 
 
 void loadGraphics(Controller *controller);
-void process(Controller *controller);
+void move(Controller *controller);
 void collisionDetect(Controller *controller);
 int eventManager(SDL_Window *window, Controller *controller);
 void render(SDL_Renderer *renderer, Controller *controller);
