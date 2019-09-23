@@ -57,6 +57,11 @@ void initScene(Controller *controller, int screenWidth, int lives){
         controller->ropes[i].h = 272;
         controller->ropes[i].y = 210;
     }
+    controller->ropes[4].y = 180;
+    controller->ropes[5].y = 180;
+    controller->ropes[6].y = 140;
+
+    controller->ropes[6].h = 500;
 }
 
 
