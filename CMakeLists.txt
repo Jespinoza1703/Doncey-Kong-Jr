@@ -20,7 +20,7 @@ add_executable(Doncey_Kong_Jr main.c
         src/game/Game.h
         src/Util.c
         src/Util.h src/entities/Controller.c
-        src/entities/Controller.h)
+        src/entities/Controller.h src/structures/LinkedList.c src/structures/LinkedList.h src/structures/Node.c src/structures/Node.h)
 
 
 target_link_libraries(Doncey_Kong_Jr -lSDL2 -lSDL2_image)
