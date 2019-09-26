@@ -38,21 +38,21 @@ void moveLeft(Monkey *monkey){
     }
 }
 
-void jump(Monkey *monkey, int time) {
+void jump(Monkey *monkey) {
 
     if (!monkey->isJumping) {
-        if (monkey->dy < 100) {
+        if (monkey->dy < 60) {
             monkey->y -= SPEED;
             monkey->dy += SPEED;
+            monkey->isJumping;
         }
     }
     else {
         monkey->y += GRAVITY;
+        monkey->dy = 0;
     }
-    monkey->isJumping = 0;
-
+    monkey->isJumping;
 }
-
 
 
 void animateMonkey(Monkey *monkey){

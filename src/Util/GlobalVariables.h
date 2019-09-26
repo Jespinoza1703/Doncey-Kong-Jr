@@ -10,7 +10,7 @@
 #define SCREEN_WIDTH 980
 #define SCREEN_HEIGHT 668
 #define SPEED 5
-#define GRAVITY  0.35f
+#define GRAVITY  0.035f
 #define LEDGEAMOUNT 7
 #define ROPEAMOUNT 8
 

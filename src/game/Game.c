@@ -24,22 +24,17 @@ int eventManager(SDL_Window *window, Controller *controller)
             }
                 break;
             case SDL_KEYDOWN:
-            {
                 switch(event.key.keysym.sym)
                 {
                     case SDLK_ESCAPE:
                         controller->end = 1;
                         break;
-                    case SDLK_UP:
-                        if(monkey->onLedge == 1) {
 
-                            monkey->onLedge = 0;
-                            monkey->isJumping = 0;
-                        }
+                    case SDLK_UP:
                         break;
                 }
-            }
                 break;
+
             case SDL_QUIT:
                 //quit out of the controller
                 controller->end = 1;
@@ -52,8 +47,10 @@ int eventManager(SDL_Window *window, Controller *controller)
 
     if(state[SDL_SCANCODE_UP])
     {
-        monkey->onLedge = 1;
-        jump(monkey, controller->time);
+        if(monkey->onLedge == 1) {
+            jump(monkey);
+            monkey->isJumping;
+        }
     }
 
     //Walking
@@ -154,7 +151,6 @@ void animate(Controller *controller)
     }
 
     monkey->dy += GRAVITY;
-
 }
 
 
@@ -172,6 +168,7 @@ void initMonkey(int lives) {
     monkey->animFrame = 0;
     monkey->facingLeft = 1;
     monkey->slowingDown = 0;
+    monkey->isJumping = 0;
 }
 
 //init ledges
