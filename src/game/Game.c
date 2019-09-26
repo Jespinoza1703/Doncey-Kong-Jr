@@ -81,42 +81,20 @@ void render(Controller *controller)
 {
     //set the drawing color to black
     SDL_SetRenderDrawColor(controller->renderer, 0, 0, 0, 0);
-
-    //Clear the screen
     SDL_RenderClear(controller->renderer);
 
-    for(int i = 0; i < LEDGEAMOUNT; i++)
-    {
-        SDL_Rect ledgeRect = {ledges[i]->x, ledges[i]->y,
-                               ledges[i]->width, ledges[i]->height};
-        SDL_RenderCopy(controller->renderer, controller->ledge_img, NULL, &ledgeRect);
-    }
-    for(int i = 0; i < ROPEAMOUNT; i++)
-    {
-        SDL_Rect ropeRect = {ropes[i]->x, ropes[i]->y,
-                              ropes[i]->width, ropes[i]->height};
-        SDL_RenderCopy(controller->renderer, controller->ropeFrames[i], NULL, &ropeRect);
-    }
+    renderLedges(controller, ledges);
+    renderRopes(controller, ropes);
+    renderLives(controller);
+    renderDonkey(controller);
+
 
     //draw a rectangle at monkey's position
     SDL_Rect rect = {monkey->x, monkey->y,
                      monkey->width, monkey->height};
-
-    SDL_Rect donkeyKRect = {10, 110, 141, 85};
-    SDL_RenderCopy(controller->renderer, controller->donkeyK_img, NULL, &donkeyKRect);
-
-
-
-    /*
-     * Flips monkey images if facing right
-     */
+    //Flips monkey images if facing right
     SDL_RenderCopyEx(controller->renderer, controller->monkeyFrames[monkey->animFrame],
                      NULL, &rect, 0, NULL, (monkey->facingLeft == 0));
-
-
-    SDL_Rect livesRect = {800, 10, 150, 46};
-    SDL_RenderCopy(controller->renderer, controller->livesFrames[monkey->lives],
-            NULL, &livesRect);
 
 
     //Show on the screen

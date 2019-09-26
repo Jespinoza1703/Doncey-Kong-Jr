@@ -1,5 +1,5 @@
 //
-// Created by atlas on 22/09/19.
+// Created by Jesica on 18/09/19.
 //
 
 #include "Controller.h"
@@ -265,6 +265,38 @@ void loadGraphics(Controller *controller) {
 
 }
 
+void renderLedges(Controller *controller, Ledge **ledges){
+    for(int i = 0; i < LEDGEAMOUNT; i++)
+    {
+        SDL_Rect ledgeRect = {ledges[i]->x, ledges[i]->y,
+                              ledges[i]->width, ledges[i]->height};
+        SDL_RenderCopy(controller->renderer, controller->ledge_img, NULL, &ledgeRect);
+    }
+}
+
+void renderRopes(Controller *controller, Rope **ropes){
+
+    for(int i = 0; i < ROPEAMOUNT; i++)
+    {
+        SDL_Rect ropeRect = {ropes[i]->x, ropes[i]->y,
+                             ropes[i]->width, ropes[i]->height};
+        SDL_RenderCopy(controller->renderer, controller->ropeFrames[i], NULL, &ropeRect);
+    }
+}
+
+void renderLives(Controller *controller){
+
+    SDL_Rect livesRect = {800, 10, 150, 46};
+    SDL_RenderCopy(controller->renderer, controller->livesFrames[LIVESAMOUNT],
+                   NULL, &livesRect);
+
+}
+
+void renderDonkey(Controller *controller){
+
+    SDL_Rect donkeyKRect = {10, 110, 141, 85};
+    SDL_RenderCopy(controller->renderer, controller->donkeyK_img, NULL, &donkeyKRect);
+}
 
 //Free all memory
 void closeWindow(SDL_Window *window, Controller *controller) {
