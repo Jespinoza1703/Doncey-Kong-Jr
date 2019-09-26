@@ -268,33 +268,23 @@ void loadGraphics(Controller *controller) {
 
 //Free all memory
 void closeWindow(SDL_Window *window, Controller *controller) {
-    SDL_DestroyTexture(controller->monkeyFrames[0]);
-    SDL_DestroyTexture(controller->monkeyFrames[1]);
-    SDL_DestroyTexture(controller->monkeyFrames[2]);
-    SDL_DestroyTexture(controller->monkeyFrames[3]);
-    SDL_DestroyTexture(controller->monkeyFrames[4]);
-    SDL_DestroyTexture(controller->blueCrocoFrames[0]);
-    SDL_DestroyTexture(controller->blueCrocoFrames[1]);
-    SDL_DestroyTexture(controller->blueCrocoFrames[2]);
-    SDL_DestroyTexture(controller->blueCrocoFrames[3]);
-    SDL_DestroyTexture(controller->blueCrocoFrames[4]);
-    SDL_DestroyTexture(controller->redCrocoFrames[0]);
-    SDL_DestroyTexture(controller->redCrocoFrames[1]);
-    SDL_DestroyTexture(controller->redCrocoFrames[2]);
-    SDL_DestroyTexture(controller->redCrocoFrames[3]);
-    SDL_DestroyTexture(controller->redCrocoFrames[4]);
-    SDL_DestroyTexture(controller->livesFrames[0]);
-    SDL_DestroyTexture(controller->livesFrames[1]);
-    SDL_DestroyTexture(controller->livesFrames[2]);
-    SDL_DestroyTexture(controller->livesFrames[3]);
-    SDL_DestroyTexture(controller->ropeFrames[0]);
-    SDL_DestroyTexture(controller->ropeFrames[1]);
-    SDL_DestroyTexture(controller->ropeFrames[2]);
-    SDL_DestroyTexture(controller->ropeFrames[3]);
-    SDL_DestroyTexture(controller->ropeFrames[4]);
-    SDL_DestroyTexture(controller->ropeFrames[5]);
-    SDL_DestroyTexture(controller->ropeFrames[6]);
-    SDL_DestroyTexture(controller->ropeFrames[7]);
+
+    for(int i; i < MONKEYFRAMES; i++){
+        SDL_DestroyTexture(controller->monkeyFrames[i]);
+    }
+    for(int i; i < BLUECROCOFRAMES; i++){
+        SDL_DestroyTexture(controller->blueCrocoFrames[i]);
+    }
+    for(int i; i < REDCROCOFRAMES; i++){
+        SDL_DestroyTexture(controller->redCrocoFrames[i]);
+    }
+    for(int i; i < LIVESFRAMES; i++){
+        SDL_DestroyTexture(controller->redCrocoFrames[i]);
+    }
+    for(int i; i < ROPEAMOUNT; i++){
+        SDL_DestroyTexture(controller->redCrocoFrames[i]);
+    }
+
     SDL_DestroyTexture(controller->banana_img);
     SDL_DestroyTexture(controller->mango_img);
     SDL_DestroyTexture(controller->apple_img);

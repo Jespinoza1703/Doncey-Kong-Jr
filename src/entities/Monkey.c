@@ -45,6 +45,7 @@ void moveLeft(Monkey *monkey){
 void jump(Monkey *monkey) {
 
     if (!monkey->isJumping) {
+
         if (monkey->dy < 100) {
             monkey->y -= SPEED*3;
             monkey->dy += SPEED;

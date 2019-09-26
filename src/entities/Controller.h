@@ -13,11 +13,11 @@
 typedef struct
 {
     //Images
-    SDL_Texture *monkeyFrames[5];
+    SDL_Texture *monkeyFrames[MONKEYFRAMES];
     SDL_Texture *livesFrames[4];
     SDL_Texture *ropeFrames[ROPEAMOUNT];
-    SDL_Texture *blueCrocoFrames[5];
-    SDL_Texture *redCrocoFrames[5];
+    SDL_Texture *blueCrocoFrames[BLUECROCOFRAMES];
+    SDL_Texture *redCrocoFrames[REDCROCOFRAMES];
     SDL_Texture *banana_img;
     SDL_Texture *mango_img;
     SDL_Texture *apple_img;
