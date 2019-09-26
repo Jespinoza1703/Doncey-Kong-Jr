@@ -47,21 +47,21 @@ int eventManager(SDL_Window *window, Controller *controller)
 
     if(state[SDL_SCANCODE_UP])
     {
+        !monkey->isJumping;
         if(monkey->onLedge == 1) {
             jump(monkey);
-            monkey->isJumping;
         }
     }
 
     //Walking
     if(state[SDL_SCANCODE_LEFT])
     {
-        moveRight(monkey);
+        moveLeft(monkey);
     }
 
     else if(state[SDL_SCANCODE_RIGHT])
     {
-        moveLeft(monkey);
+        moveRight(monkey);
     }
 
     else {
@@ -72,6 +72,7 @@ int eventManager(SDL_Window *window, Controller *controller)
             initializeGame(window, controller, monkey->lives);
         }
     }
+    monkey->y += GRAVITY;
 
     return controller->end;
 }

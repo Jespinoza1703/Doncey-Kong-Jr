@@ -8,24 +8,9 @@
 
 void moveRight(Monkey *monkey){
 
-    if(monkey->x > 0){
-        monkey->dx -= 0.25;
-        if(monkey->dx < -SPEED)
-        {
-            monkey->dx = -SPEED;
-        }
-        monkey->facingLeft = 1;
-        monkey->slowingDown = 0;
-    }
-    else{
-        monkey->x = 0;
-    }
-}
-
-void moveLeft(Monkey *monkey){
-
     if(monkey->x < (SCREEN_WIDTH - monkey->width)){
-        monkey->dx += 0.25;
+        monkey->dx += 0.5;
+        monkey->x += monkey->dx;
         if(monkey->dx > SPEED)
         {
             monkey->dx = SPEED;
@@ -38,27 +23,42 @@ void moveLeft(Monkey *monkey){
     }
 }
 
+void moveLeft(Monkey *monkey){
+
+    if(monkey->x > 0){
+        monkey->dx -= 0.5;
+        monkey->x += monkey->dx;
+        if(monkey->dx < -SPEED)
+        {
+            monkey->dx = -SPEED;
+        }
+        monkey->facingLeft = 1;
+        monkey->slowingDown = 0;
+    }
+    else{
+        monkey->x = 0;
+    }
+}
+
+
+
 void jump(Monkey *monkey) {
 
     if (!monkey->isJumping) {
-        if (monkey->dy < 60) {
-            monkey->y -= SPEED;
+        if (monkey->dy < 100) {
+            monkey->y -= SPEED*3;
             monkey->dy += SPEED;
             monkey->isJumping;
         }
-    }
-    else {
+    }else{
         monkey->y += GRAVITY;
         monkey->dy = 0;
     }
-    monkey->isJumping;
+
 }
 
 
 void animateMonkey(Monkey *monkey){
-
-    monkey->x += monkey->dx;
-    monkey->y += monkey->dy;
 
     if(monkey->dx != 0 && monkey->onLedge && !monkey->slowingDown)
     {
@@ -83,5 +83,6 @@ void monkeyStill(Monkey *monkey) {
             monkey->dx = 0;
         }
     }
+
 }
 
