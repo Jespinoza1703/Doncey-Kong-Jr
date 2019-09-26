@@ -7,7 +7,7 @@
 /*
  * Allocates memory for the linked list.
  */
-LinkedList *initializeList(){
+LinkedList *newList(){
 
     LinkedList *list = (LinkedList*) malloc(sizeof(LinkedList));
     list->head = NULL;

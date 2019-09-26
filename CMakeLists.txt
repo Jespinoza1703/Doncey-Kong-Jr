@@ -18,9 +18,8 @@ add_executable(Doncey_Kong_Jr main.c
         src/graphics/Menu.h
         src/game/Game.c
         src/game/Game.h
-        src/Util.c
-        src/Util.h src/entities/Controller.c
-        src/entities/Controller.h src/structures/LinkedList.c src/structures/LinkedList.h src/structures/Node.c src/structures/Node.h)
+        src/entities/Controller.c
+        src/entities/Controller.h src/structures/LinkedList.c src/structures/LinkedList.h src/structures/Node.c src/structures/Node.h src/entities/Monkey.c src/entities/Monkey.h src/entities/Ledge.c src/entities/Ledge.h src/Util/GlobalVariables.h src/entities/Rope.c src/entities/Rope.h)
 
 
 target_link_libraries(Doncey_Kong_Jr -lSDL2 -lSDL2_image)

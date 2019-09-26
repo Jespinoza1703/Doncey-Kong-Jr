@@ -1,0 +1,17 @@
+//
+// Created by jessica on 25/09/19.
+//
+
+#ifndef DONCEY_KONG_JR_GLOBALVARIABLES_H
+#define DONCEY_KONG_JR_GLOBALVARIABLES_H
+
+
+
+#define SCREEN_WIDTH 980
+#define SCREEN_HEIGHT 668
+#define SPEED 6
+#define GRAVITY  0.35f
+#define LEDGEAMOUNT 7
+#define ROPEAMOUNT 8
+
+#endif //DONCEY_KONG_JR_GLOBALVARIABLES_H
