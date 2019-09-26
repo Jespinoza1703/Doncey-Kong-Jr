@@ -6,7 +6,6 @@
 #define DONCEY_KONG_JR_MONKEY_H
 
 #include <stdio.h>
-#include "Ledge.h"
 #include "../Util/GlobalVariables.h"
 
 typedef struct
@@ -16,17 +15,17 @@ typedef struct
     int lives;
     float dx, dy;
     int onLedge, onRope;
+    int isJumping;
 
     int animFrame, facingLeft, slowingDown;
 
 } Monkey;
 
 
-void ledgeCollision(Monkey *monkey, Ledge **ledges);
 void moveRight(Monkey *monkey);
 void moveLeft(Monkey *monkey);
 void monkeyStill(Monkey *monkey);
-void jump(Monkey *monkey);
+void jump(Monkey *monkey, int time);
 void animateMonkey(Monkey *monkey);
 
 

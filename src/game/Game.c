@@ -31,10 +31,10 @@ int eventManager(SDL_Window *window, Controller *controller)
                         controller->end = 1;
                         break;
                     case SDLK_UP:
-                        if(monkey->onLedge)
-                        {
-                            monkey->dy = -4;
+                        if(monkey->onLedge == 1) {
+
                             monkey->onLedge = 0;
+                            monkey->isJumping = 0;
                         }
                         break;
                 }
@@ -52,7 +52,8 @@ int eventManager(SDL_Window *window, Controller *controller)
 
     if(state[SDL_SCANCODE_UP])
     {
-        jump(monkey);
+        monkey->onLedge = 1;
+        jump(monkey, controller->time);
     }
 
     //Walking
@@ -151,6 +152,9 @@ void animate(Controller *controller)
     if(controller->time % 15 == 0) {
         animateMonkey(monkey);
     }
+
+    monkey->dy += GRAVITY;
+
 }
 
 
@@ -219,10 +223,11 @@ void initializeGame(SDL_Window *window, Controller *controller, int lives){
         animate(controller);
         ledgeCollision(monkey, ledges);
 
-        SDL_Delay(1);
+        SDL_Delay(5);
     }
 
     closeWindow(window, &controller);
+    freeMemory();
 }
 
 
@@ -237,4 +242,16 @@ void endGame(SDL_Window *window, Controller *controller, int win){
         }
     }
 
+}
+
+void freeMemory(){
+
+    for(int i = 0; i < ROPEAMOUNT; i++)
+        free(ropes[i]);
+    for(int i = 0; i < LEDGEAMOUNT; i++)
+        free(ledges[i]);
+    free(monkey);
+    //free(donkey);
+    free(ropes);
+    free(ledges);
 }

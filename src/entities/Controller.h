@@ -7,16 +7,11 @@
 
 #include "SDL.h"
 #include "SDL_image.h"
-#include "Monkey.h"
-#include "Ledge.h"
 #include "../Util/GlobalVariables.h"
-#include "Rope.h"
-
 
 
 typedef struct
 {
-
     //Images
     SDL_Texture *monkeyFrames[5];
     SDL_Texture *livesFrames[4];

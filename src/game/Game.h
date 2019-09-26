@@ -2,6 +2,10 @@
 #include <time.h>
 #include "../entities/Controller.h"
 #include "../Util/GlobalVariables.h"
+#include "../entities/Monkey.h"
+#include "../entities/Rope.h"
+#include "../entities/Ledge.h"
+#include "../Util/Collisions.h"
 
 
 //Players
@@ -20,4 +24,5 @@ void initLedges();
 void initRopes();
 void initializeGame(SDL_Window *window, Controller *controller, int lives);
 void endGame(SDL_Window *window, Controller *controller, int win);
+void freeMemory();
 
