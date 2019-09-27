@@ -3,7 +3,7 @@
 //
 
 #include "Controller.h"
-
+#include "Crocodile.h"
 
 
 //Load images and create rendering textures from them
@@ -283,6 +283,26 @@ void renderRopes(Controller *controller, Rope **ropes){
         SDL_RenderCopy(controller->renderer, controller->ropeFrames[i], NULL, &ropeRect);
     }
 }
+
+
+void renderCrocos(Controller *controller, LinkedList *crocos) {
+
+    for (int i = 0; i < getSize(crocos); i++) {
+        Crocodile *croco = (Crocodile *)getNode(crocos, i)->value;
+
+        SDL_Rect crocoRect = {
+                croco->x, croco->y,
+                croco->width, croco->height
+        };
+        if(croco->isRed){
+            SDL_RenderCopy(controller->renderer, controller->redCrocoFrames[i], NULL, &crocoRect);
+        }else{
+            SDL_RenderCopy(controller->renderer, controller->blueCrocoFrames[i], NULL, &crocoRect);
+        }
+    }
+
+}
+
 
 void renderLives(Controller *controller){
 

@@ -2,6 +2,7 @@
 // Created by jessica on 16/09/19.
 //
 
+#include <stdio.h>
 #include "LinkedList.h"
 
 /*
@@ -23,10 +24,10 @@ void insertNode(LinkedList *list, Node* node){
         list->head = node;
 
     else{
-        Node* head = list->head;
-        while(head->next != NULL)
-            head = head->next;
-        head->next = node;
+        Node* tmp = list->head;
+        while(tmp->next != NULL)
+            tmp = tmp->next;
+        tmp->next = node;
     }
     list->size++;
 }
@@ -35,6 +36,7 @@ void insertNode(LinkedList *list, Node* node){
  * Deletes a node from the list.
  */
 void deleteNode(LinkedList *list, Node* node) {
+
     Node *tmp = list->head;
     Node *deleted;
     if (tmp == node) {
@@ -55,4 +57,30 @@ void deleteNode(LinkedList *list, Node* node) {
  */
 int getSize(LinkedList *list){
     return list->size;
+}
+
+
+Node *getNode(LinkedList *list, int index){
+
+    if(index < list->size){
+        Node *result;
+        int count = 0;
+        Node *tmp = list->head;
+        while (tmp != NULL)
+        {
+            if(index != count){
+                count++;
+                tmp = tmp->next;
+            }
+            else{
+                result = tmp;
+                break;
+            }
+        }
+        return  result;
+    }
+    else{
+        printf("List index out of range \n");
+    }
+
 }

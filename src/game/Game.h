@@ -5,7 +5,9 @@
 #include "../entities/Monkey.h"
 #include "../entities/Rope.h"
 #include "../entities/Ledge.h"
+#include "../entities/Crocodile.h"
 #include "../Util/Collisions.h"
+#include "../structures/LinkedList.h"
 
 
 //Players
@@ -14,6 +16,8 @@ Monkey *monkey;
 //Ledges/Ropes
 Ledge **ledges;
 Rope **ropes;
+LinkedList *crocos;
+LinkedList *fruits;
 
 int eventManager(SDL_Window *window, Controller *controller);
 void render(Controller *controller);

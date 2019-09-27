@@ -20,6 +20,7 @@ LinkedList *newList();
 int getSize(LinkedList *list);
 void insertNode(LinkedList *list, Node *node);
 void deleteNode(LinkedList *list, Node *node);
+Node *getNode(LinkedList *list, int index);
 
 
 

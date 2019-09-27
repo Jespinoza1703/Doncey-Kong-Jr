@@ -1,4 +1,5 @@
 #include "Game.h"
+#include "../entities/Crocodile.h"
 
 int eventManager(SDL_Window *window, Controller *controller)
 {
@@ -87,7 +88,7 @@ void render(Controller *controller)
     renderRopes(controller, ropes);
     renderLives(controller);
     renderDonkey(controller);
-
+    if(getSize(crocos) > 0) renderCrocos(controller, crocos);
 
     //draw a rectangle at monkey's position
     SDL_Rect rect = {monkey->x, monkey->y,
@@ -95,6 +96,8 @@ void render(Controller *controller)
     //Flips monkey images if facing right
     SDL_RenderCopyEx(controller->renderer, controller->monkeyFrames[monkey->animFrame],
                      NULL, &rect, 0, NULL, (monkey->facingLeft == 0));
+
+
 
 
     //Show on the screen
@@ -179,6 +182,24 @@ void initRopes(){
     ropes[6]->height = 500;
 }
 
+void initCroco(int rope, int isRed){
+
+    Crocodile *croco = (Crocodile*) malloc(sizeof(Crocodile));
+    croco->isRed = isRed;
+    croco->width = 60;
+    croco->height = 40;
+    croco->x = 100;
+    croco->y = 150;
+    croco->dx = 0;
+    croco->dy = 0;
+    croco->facingDown = 0;
+    croco->facingUp = 0;
+    croco->animFrame = 0;
+    croco->onRope = 0;
+    Node *node = newNode(croco);
+    insertNode(crocos, node);
+
+}
 
 void initializeGame(SDL_Window *window, Controller *controller, int lives){
 
@@ -186,6 +207,8 @@ void initializeGame(SDL_Window *window, Controller *controller, int lives){
     initMonkey(lives);
     initLedges();
     initRopes();
+    crocos = newList();
+    initCroco(1, 0);
 
     controller->time = 0;
 
@@ -198,6 +221,10 @@ void initializeGame(SDL_Window *window, Controller *controller, int lives){
         render(controller);
         animate(controller);
         ledgeCollision(monkey, ledges);
+
+        crocoMove((Crocodile *)getNode(crocos, 0)->value);
+        int k = controller->time;
+        printf("%d\n", k);
 
         SDL_Delay(5);
     }

@@ -8,6 +8,7 @@
 #include "SDL.h"
 #include "SDL_image.h"
 #include "../Util/GlobalVariables.h"
+#include "../structures/LinkedList.h"
 #include "Ledge.h"
 #include "Rope.h"
 
@@ -41,6 +42,7 @@ void renderLedges(Controller *controller, Ledge **ledges);
 void renderRopes(Controller *controller, Rope **ropes);
 void renderLives(Controller *controller);
 void renderDonkey(Controller *controller);
+void renderCrocos(Controller *controller, LinkedList *crocos);
 void closeWindow(SDL_Window *window, Controller *controller);
 
 
