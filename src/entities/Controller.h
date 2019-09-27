@@ -11,6 +11,7 @@
 #include "../structures/LinkedList.h"
 #include "Ledge.h"
 #include "Rope.h"
+#include "Monkey.h"
 
 
 typedef struct
@@ -40,7 +41,7 @@ typedef struct
 void loadGraphics(Controller *controller);
 void renderLedges(Controller *controller, Ledge **ledges);
 void renderRopes(Controller *controller, Rope **ropes);
-void renderLives(Controller *controller);
+void renderLives(Controller *controller, Monkey *monkey);
 void renderDonkey(Controller *controller);
 void renderCrocos(Controller *controller, LinkedList *crocos);
 void closeWindow(SDL_Window *window, Controller *controller);

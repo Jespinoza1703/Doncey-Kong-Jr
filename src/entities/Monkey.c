@@ -63,7 +63,6 @@ void animateMonkey(Monkey *monkey){
 
     if(monkey->dx != 0 && monkey->onLedge && !monkey->slowingDown)
     {
-
         if(monkey->animFrame < 4)
         {
             monkey->animFrame++;

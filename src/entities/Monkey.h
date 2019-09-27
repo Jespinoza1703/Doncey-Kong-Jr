@@ -16,6 +16,7 @@ typedef struct
     float dx, dy;
     int onLedge, onRope;
     int isJumping;
+    int isColliding;
 
     int animFrame, facingLeft, slowingDown;
 

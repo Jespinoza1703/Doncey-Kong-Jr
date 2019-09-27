@@ -69,7 +69,8 @@ int eventManager(SDL_Window *window, Controller *controller)
         monkeyStill(monkey);
 
         if (monkey->y >= SCREEN_HEIGHT) {
-            monkey->lives -= 1;
+            monkey->lives--;
+            freeMemory();
             initializeGame(window, controller, monkey->lives);
         }
     }
@@ -86,7 +87,7 @@ void render(Controller *controller)
 
     renderLedges(controller, ledges);
     renderRopes(controller, ropes);
-    renderLives(controller);
+    renderLives(controller, monkey);
     renderDonkey(controller);
     if(getSize(crocos) > 0) renderCrocos(controller, crocos);
 
@@ -151,6 +152,7 @@ void initMonkey(int lives) {
     monkey->facingLeft = 1;
     monkey->slowingDown = 0;
     monkey->isJumping = 0;
+    monkey->isColliding = 0;
 }
 
 //init ledges
@@ -189,7 +191,7 @@ void initCroco(int rope, int isRed){
     croco->width = 60;
     croco->height = 40;
     croco->x = 100;
-    croco->y = 150;
+    croco->y = 280;
     croco->dx = 0;
     croco->dy = 0;
     croco->facingDown = 0;
@@ -221,6 +223,12 @@ void initializeGame(SDL_Window *window, Controller *controller, int lives){
         render(controller);
         animate(controller);
         ledgeCollision(monkey, ledges);
+        if(crocoCollision(monkey, crocos)) {
+            freeMemory();
+            initializeGame(window, controller, monkey->lives);
+            break;
+        }
+        if(controller->time % 100 == 0) monkey->isColliding = 0;
 
         crocoMove((Crocodile *)getNode(crocos, 0)->value);
         int k = controller->time;

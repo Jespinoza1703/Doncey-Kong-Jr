@@ -66,6 +66,15 @@ void loadGraphics(Controller *controller) {
     controller->monkeyFrames[4] = SDL_CreateTextureFromSurface(controller->renderer, surface);
     SDL_FreeSurface(surface);
 
+    surface = IMG_Load("../images/fruits/banana.png");
+    if (surface == NULL) {
+        printf("Cannot find banana.png\n\n");
+        SDL_Quit();
+        exit(1);
+    }
+    controller->monkeyFrames[5] = SDL_CreateTextureFromSurface(controller->renderer, surface);
+    SDL_FreeSurface(surface);
+
 
     /*
      * Fruits
@@ -304,10 +313,10 @@ void renderCrocos(Controller *controller, LinkedList *crocos) {
 }
 
 
-void renderLives(Controller *controller){
+void renderLives(Controller *controller, Monkey *monkey){
 
     SDL_Rect livesRect = {800, 10, 150, 46};
-    SDL_RenderCopy(controller->renderer, controller->livesFrames[LIVESAMOUNT],
+    SDL_RenderCopy(controller->renderer, controller->livesFrames[monkey->lives],
                    NULL, &livesRect);
 
 }
