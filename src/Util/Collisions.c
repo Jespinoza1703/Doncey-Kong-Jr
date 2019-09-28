@@ -50,7 +50,7 @@ int crocoCollision(Monkey *monkey, LinkedList *crocos){
         Crocodile *croco = (Crocodile *)getNode(crocos, i)->value;
 
         if(monkey->x + monkey->width >= croco->x && monkey->x < croco->x + croco->width &&
-        monkey->y + monkey->height >= croco->y && monkey->y < croco->y + croco->height) {
+           monkey->y + monkey->height >= croco->y && monkey->y < croco->y + croco->height) {
 
             if (!monkey->isColliding) {
                 monkey->lives--;
@@ -65,18 +65,19 @@ int crocoCollision(Monkey *monkey, LinkedList *crocos){
 
 int ropeCollision(Monkey *monkey, Rope **ropes){
 
+    int result = 0;
     for(int i = 0; i < ROPEAMOUNT; i++)
     {
         float ropeX = ropes[i]->x, ropeY = ropes[i]->y;
         float ropeWidth = ropes[i]->width, ropeHeight = ropes[i]->height;
 
-        if(monkey->x + monkey->width >= ropeX && monkey->x < ropeX + ropeWidth &&
+        if(monkey->x + monkey->width/2 >= ropeX && monkey->x < ropeX + ropeWidth &&
            monkey->y + monkey->height >= ropeY && monkey->y < ropeY + ropeHeight)
         {
-            monkey->onRope = 1;
+            result = 1;
         }
     }
-    return monkey->onRope;
+    return result;
 }
 
 

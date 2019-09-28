@@ -42,15 +42,13 @@ void moveLeft(Monkey *monkey){
 
 void moveDown(Monkey *monkey){
 
-    monkey->dy += 0.5;
-    monkey->y += monkey->dy;
-    if(monkey->dy < -SPEED)
-    {
-        monkey->dy = -SPEED;
-    }
-    monkey->slowingDown = 0;
+    monkey->y += 2;
 }
 
+void moveUp(Monkey *monkey){
+
+    monkey->y -= 2;
+}
 
 
 void jump(Monkey *monkey) {
@@ -58,15 +56,17 @@ void jump(Monkey *monkey) {
     if (!monkey->isJumping) {
 
         if (monkey->dy < 80) {
-            monkey->y -= SPEED*3;
+            monkey->y -= JUMPSPEED;
             monkey->dy += SPEED;
             monkey->isJumping;
         }
     }
 
     else{
-        monkey->y += GRAVITY;
-        monkey->dy = 0;
+        if(monkey->gravity) {
+            monkey->y += GRAVITY;
+            monkey->dy = 0;
+        }
     }
 }
 
@@ -98,4 +98,3 @@ void monkeyStill(Monkey *monkey) {
     }
 
 }
-

@@ -1,3 +1,4 @@
+
 #include "Game.h"
 #include "../entities/Crocodile.h"
 #include "../entities/Fruit.h"
@@ -49,13 +50,11 @@ int eventManager(SDL_Window *window, Controller *controller)
 
     if(state[SDL_SCANCODE_UP])
     {
-        if(monkey->onRope){
-            monkey->y -= SPEED;
-        }
         !monkey->isJumping;
         if(monkey->onLedge == 1) {
             jump(monkey);
         }
+        if(monkey->onRope) moveUp(monkey);
     }
 
     //Rope climbing
@@ -84,7 +83,7 @@ int eventManager(SDL_Window *window, Controller *controller)
             initializeGame(window, controller, monkey->lives);
         }
     }
-    monkey->y += GRAVITY;
+    if(monkey->gravity) monkey->y += GRAVITY;
 
     return controller->end;
 }
@@ -164,6 +163,7 @@ void initMonkey(int lives) {
     monkey->slowingDown = 0;
     monkey->isJumping = 0;
     monkey->isColliding = 0;
+    monkey->gravity = 1;
 }
 
 //init ledges
@@ -252,14 +252,16 @@ void initializeGame(SDL_Window *window, Controller *controller, int lives){
             initializeGame(window, controller, monkey->lives);
             break;
         }
-        ropeCollision(monkey, ropes);
+        if(ropeCollision(monkey, ropes)){
+            monkey->onRope = 1;
+            monkey->gravity = 0;
+        }else
+            monkey->gravity = 1;
         if(getSize(fruits) > 0) fruitCollision(monkey, fruits);
 
         if(controller->time % 500 == 0) monkey->isColliding = 0;
 
         crocoMove((Crocodile *)getNode(crocos, 0)->value);
-        int k = controller->time;
-        printf("%d\n", k);
 
         SDL_Delay(5);
     }
