@@ -70,7 +70,8 @@ int ropeCollision(Monkey *monkey, Rope **ropes){
         float ropeX = ropes[i]->x, ropeY = ropes[i]->y;
         float ropeWidth = ropes[i]->width, ropeHeight = ropes[i]->height;
 
-        if(monkey->x + monkey->width/2 >= ropeX && monkey->x < ropeX + ropeWidth &&
+
+        if((monkey->x - 30) + monkey->width >= ropeX && monkey->x < ropeX + ropeWidth - 30 &&
            monkey->y + monkey->height >= ropeY && monkey->y < ropeY + ropeHeight)
         {
             result = 1;

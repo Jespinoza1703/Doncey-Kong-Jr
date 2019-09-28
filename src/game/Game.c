@@ -170,7 +170,7 @@ void initMonkey(int lives) {
 void initLedges(){
 
     ledges = (Ledge**) malloc(sizeof(Ledge*) * LEDGEAMOUNT);
-    ledges[LEDGEAMOUNT-1] = newLedge(10, 195, SCREEN_WIDTH*0.55, 25);
+    ledges[LEDGEAMOUNT-1] = newLedge(10, 195, SCREEN_WIDTH*0.5, 25);
     ledges[LEDGEAMOUNT-2] = newLedge(590, 160, SCREEN_WIDTH*0.25, 25);
     ledges[LEDGEAMOUNT-3] = newLedge(250, 100, SCREEN_WIDTH*0.08, 25);
     ledges[LEDGEAMOUNT-4] = newLedge(200, 330, SCREEN_WIDTH*0.11, 25);
@@ -184,15 +184,14 @@ void initRopes(){
 
     ropes = (Rope**) malloc(sizeof(Rope*) * ROPEAMOUNT);
 
-    for(int i = 0; i < ROPEAMOUNT; i++)
-    {
-        ropes[i] = newRope(150*i, 210, 35, 272);
-    }
-
-    ropes[4]->y = 180;
-    ropes[5]->y = 180;
-    ropes[6]->y = 140;
-    ropes[6]->height = 500;
+    ropes[0] = newRope(0, 210, 24, 217);
+    ropes[1] = newRope(150, 210, 26, 179);
+    ropes[2] = newRope(300, 210, 19, 232);
+    ropes[3] = newRope(450, 210, 24, 135);
+    ropes[4] = newRope(600, 180, 20, 272);
+    ropes[5] = newRope(750, 180, 20, 279);
+    ropes[6] = newRope(900, 140, 18, 500);
+    ropes[7] = newRope(1050, 210, 19, 263);
 }
 
 void initCroco(int rope, int isRed){
