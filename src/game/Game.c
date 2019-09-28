@@ -213,14 +213,16 @@ void initCroco(int rope, int isRed){
     insertNode(crocos, node);
 }
 
-void initFruit(int rope, int type){
+void initFruit(int rope, int type, int pos){
 
     Fruit *fruit = (Fruit*) malloc(sizeof(Fruit));
     fruit->type = type;
     fruit->width = 45;
     fruit->height = 45;
-    fruit->x = 500;
-    fruit->y = 300;
+    fruit->rope = ropes[getRope(rope)];
+    fruit->y = 0;
+    fruit->relativePos = pos + fruit->rope->y;
+    fruit->x = fruit->rope->x;
     Node *node = newNode(fruit);
     insertNode(fruits, node);
 }
@@ -234,7 +236,7 @@ void initializeGame(SDL_Window *window, Controller *controller, int lives){
     crocos = newList();
     fruits = newList();
     initCroco(5, 0);
-    initFruit(1, 2);
+    initFruit(4, 2, 50);
 
     controller->time = 0;
 
@@ -271,6 +273,12 @@ void initializeGame(SDL_Window *window, Controller *controller, int lives){
             else
                 deleteNode(crocos, getNode(crocos, i));
         }
+        for (int i = 0; i < getSize(fruits); i++) {
+
+            Fruit *fruit = (Fruit *)getNode(fruits, i)->value;
+            setFruit(fruit);
+        }
+
 
         SDL_Delay(5);
     }

@@ -27,7 +27,7 @@ void initMonkey(int lives);
 void initLedges();
 void initRopes();
 void initCroco(int rope, int isRed);
-void initFruit(int rope, int type);
+void initFruit(int rope, int type, int pos);
 void initializeGame(SDL_Window *window, Controller *controller, int lives);
 int getRope(int rope);
 void endGame(SDL_Window *window, Controller *controller, int win);

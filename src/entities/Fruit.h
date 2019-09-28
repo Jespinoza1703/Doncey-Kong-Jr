@@ -6,13 +6,19 @@
 #define DONCEY_KONG_JR_FRUIT_H
 
 
+#include "Rope.h"
+
 typedef struct
 {
     float x, y;
     int width, height;
     int type;
+    Rope *rope;
+    int relativePos;
 
 } Fruit;
+
+void setFruit(Fruit *fruit);
 
 
 #endif //DONCEY_KONG_JR_FRUIT_H

@@ -81,11 +81,11 @@ int ropeCollision(Monkey *monkey, Rope **ropes){
 }
 
 
-int fruitCollision(Monkey *monkey, LinkedList *fruits){
+Node *fruitCollision(Monkey *monkey, LinkedList *fruits){
 
     for(int i = 0; i < getSize(fruits); i++)
     {
-        Fruit *fruit = (Fruit *)getNode(fruit, i)->value;
+        Fruit *fruit = (Fruit *)getNode(fruits, i)->value;
 
         if(monkey->x + monkey->width >= fruit->x && monkey->x < fruit->x + fruit->width &&
            monkey->y + monkey->height >= fruit->y && monkey->y < fruit->y + fruit->height) {
@@ -95,7 +95,7 @@ int fruitCollision(Monkey *monkey, LinkedList *fruits){
                     monkey->lives++;
                     monkey->isColliding = 1;
                 }
-                return 1;
+                return getNode(fruits, i);
             }
 
         }
