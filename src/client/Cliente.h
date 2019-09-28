@@ -13,7 +13,7 @@
 #include <unistd.h>
 #include <string.h>
 
-#define IP "192.168.100.7"
+#define IP "192.168.43.226"
 #define PORT 8080
 #define MAX 1024
 

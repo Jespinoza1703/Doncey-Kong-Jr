@@ -13,6 +13,7 @@ int main(int argc, char *argv[]){
     Controller controller;
     SDL_Window *window = NULL;
     createWindow(window, &controller);
+    //start();
 
     initializeGame(window, &controller, LIVESAMOUNT);
 }

@@ -51,13 +51,10 @@ int crocoCollision(Monkey *monkey, LinkedList *crocos){
         if(monkey->x + monkey->width >= croco->x && monkey->x < croco->x + croco->width &&
            monkey->y + monkey->height >= croco->y && monkey->y < croco->y + croco->height) {
 
-            if (!monkey->isColliding) {
-                if(monkey->lives > 0){
-                    monkey->lives--;
-                    monkey->isColliding = 1;
-                    return 1;
-                }
-
+            if (!monkey->crocoColliding) {
+                monkey->lives--;
+                monkey->crocoColliding = 1;
+                return 1;
             }
 
         }
@@ -93,10 +90,10 @@ Node *fruitCollision(Monkey *monkey, LinkedList *fruits){
         if(monkey->x + monkey->width >= fruit->x && monkey->x < fruit->x + fruit->width &&
            monkey->y + monkey->height >= fruit->y && monkey->y < fruit->y + fruit->height) {
 
-            if (!monkey->isColliding) {
+            if (!monkey->fruitColliding) {
                 if(monkey->lives < 3) {
                     monkey->lives++;
-                    monkey->isColliding = 1;
+                    monkey->fruitColliding = 1;
                 }
                 return getNode(fruits, i);
             }

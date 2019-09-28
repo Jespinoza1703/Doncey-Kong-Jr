@@ -161,7 +161,8 @@ void initMonkey(int lives) {
     monkey->facingLeft = 1;
     monkey->slowingDown = 0;
     monkey->isJumping = 0;
-    monkey->isColliding = 0;
+    monkey->fruitColliding = 0;
+    monkey->crocoColliding = 0;
     monkey->gravity = 1;
 }
 
@@ -261,14 +262,19 @@ void initializeGame(SDL_Window *window, Controller *controller, int lives){
             initializeGame(window, controller, monkey->lives);
             break;
         }
+
         if(ropeCollision(monkey, ropes)){
             monkey->onRope = 1;
             monkey->gravity = 0;
         }else
             monkey->gravity = 1;
+
         if(getSize(fruits) > 0) fruitCollision(monkey, fruits);
 
-        if(controller->time % 500 == 0) monkey->isColliding = 0;
+        if(controller->time % 300 == 0) {
+            monkey->fruitColliding = 0;
+            monkey->crocoColliding = 0;
+        }
 
         for (int i = 0; i < getSize(crocos); i++) {
 
@@ -318,7 +324,6 @@ void endGame(SDL_Window *window, Controller *controller, int win){
             initializeGame(window, controller, 3);
         }
     }
-
 }
 
 void freeMemory(){
