@@ -20,16 +20,18 @@ LinkedList *newList(){
  * Adds a node to the end list.
  */
 void insertNode(LinkedList *list, Node* node){
-    if(list->head == NULL)
+    if(list->head == NULL) {
         list->head = node;
+        list->size++;
+    }
 
     else{
         Node* tmp = list->head;
         while(tmp->next != NULL)
             tmp = tmp->next;
         tmp->next = node;
+        list->size++;
     }
-    list->size++;
 }
 
 /*
@@ -63,7 +65,7 @@ int getSize(LinkedList *list){
 
 Node *getNode(LinkedList *list, int index){
 
-    if(index < list->size){
+    if(index < list->size + 1){
         Node *result;
         int count = 0;
         Node *tmp = list->head;

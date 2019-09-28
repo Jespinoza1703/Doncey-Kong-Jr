@@ -23,10 +23,8 @@ typedef struct
 } Crocodile;
 
 
-void crocoMoveDown(Crocodile *croco);
 void crocoMove(Crocodile *croco);
 void animateCroco(LinkedList *crocos);
-int collideRope(Crocodile *croco);
 
 
 #endif //DONCEY_KONG_JR_CROCODILE_H

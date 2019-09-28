@@ -238,9 +238,9 @@ void initializeGame(SDL_Window *window, Controller *controller, int lives){
     int i = atoi(pD);
     */
     initCroco(5, 1);
-    initFruit(4, 3, 50);
+    initFruit(3, 2, 50);
+    initFruit(0, 3, 50);
     initCroco(2, 0);
-    initFruit(3, 4, 50);
 
     controller->time = 0;
 

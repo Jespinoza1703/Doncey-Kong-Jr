@@ -52,9 +52,12 @@ int crocoCollision(Monkey *monkey, LinkedList *crocos){
            monkey->y + monkey->height >= croco->y && monkey->y < croco->y + croco->height) {
 
             if (!monkey->isColliding) {
-                monkey->lives--;
-                monkey->isColliding = 1;
-                return 1;
+                if(monkey->lives > 0){
+                    monkey->lives--;
+                    monkey->isColliding = 1;
+                    return 1;
+                }
+
             }
 
         }
