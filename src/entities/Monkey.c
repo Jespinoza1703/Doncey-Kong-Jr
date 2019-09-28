@@ -40,6 +40,17 @@ void moveLeft(Monkey *monkey){
     }
 }
 
+void moveDown(Monkey *monkey){
+
+    monkey->dy += 0.5;
+    monkey->y += monkey->dy;
+    if(monkey->dy < -SPEED)
+    {
+        monkey->dy = -SPEED;
+    }
+    monkey->slowingDown = 0;
+}
+
 
 
 void jump(Monkey *monkey) {
@@ -51,11 +62,12 @@ void jump(Monkey *monkey) {
             monkey->dy += SPEED;
             monkey->isJumping;
         }
-    }else{
+    }
+
+    else{
         monkey->y += GRAVITY;
         monkey->dy = 0;
     }
-
 }
 
 
@@ -77,6 +89,7 @@ void monkeyStill(Monkey *monkey) {
 
     if (monkey->y < (SCREEN_HEIGHT)) {
         monkey->animFrame = 0;
+        monkey->onRope = 0;
         monkey->dx *= 0.5f;
         monkey->slowingDown = 1;
         if (fabsf(monkey->dx) < 0.1f) {

@@ -25,6 +25,7 @@ typedef struct
 
 void moveRight(Monkey *monkey);
 void moveLeft(Monkey *monkey);
+void moveDown(Monkey *monkey);
 void monkeyStill(Monkey *monkey);
 void jump(Monkey *monkey);
 void animateMonkey(Monkey *monkey);

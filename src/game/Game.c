@@ -48,10 +48,19 @@ int eventManager(SDL_Window *window, Controller *controller)
 
     if(state[SDL_SCANCODE_UP])
     {
+        if(monkey->onRope){
+            monkey->y -= SPEED;
+        }
         !monkey->isJumping;
         if(monkey->onLedge == 1) {
             jump(monkey);
         }
+    }
+
+    //Rope climbing
+    if(state[SDL_SCANCODE_DOWN])
+    {
+        if(monkey->onRope) moveDown(monkey);
     }
 
     //Walking
@@ -191,7 +200,7 @@ void initCroco(int rope, int isRed){
     croco->width = 60;
     croco->height = 40;
     croco->x = 100;
-    croco->y = 280;
+    croco->y = 150;
     croco->dx = 0;
     croco->dy = 0;
     croco->facingDown = 0;
@@ -228,6 +237,8 @@ void initializeGame(SDL_Window *window, Controller *controller, int lives){
             initializeGame(window, controller, monkey->lives);
             break;
         }
+        ropeCollision(monkey, ropes);
+
         if(controller->time % 100 == 0) monkey->isColliding = 0;
 
         crocoMove((Crocodile *)getNode(crocos, 0)->value);
@@ -245,10 +256,12 @@ void initializeGame(SDL_Window *window, Controller *controller, int lives){
 void endGame(SDL_Window *window, Controller *controller, int win){
 
     if(win == 1){
+        freeMemory();
         initializeGame(window, controller, 3);
     }
     else{
         if(controller->time % 50 == 0){
+            freeMemory();
             initializeGame(window, controller, 3);
         }
     }

@@ -10,9 +10,12 @@
 #include "../entities/Ledge.h"
 #include "../Util/GlobalVariables.h"
 #include "../structures/LinkedList.h"
+#include "../entities/Crocodile.h"
+#include "../entities/Rope.h"
 
 void ledgeCollision(Monkey *monkey, Ledge **ledges);
 int crocoCollision(Monkey *monkey, LinkedList *crocos);
+int ropeCollision(Monkey *monkey, Rope **ropes);
 
 
 #endif //DONCEY_KONG_JR_COLLISIONS_H
