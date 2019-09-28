@@ -1,4 +1,3 @@
-
 #include "Game.h"
 #include "../entities/Crocodile.h"
 #include "../entities/Fruit.h"
@@ -103,7 +102,7 @@ void render(Controller *controller)
 
     //draw a rectangle at monkey's position
     SDL_Rect monkeyRect = {monkey->x, monkey->y,
-                     monkey->width, monkey->height};
+                           monkey->width, monkey->height};
     //Flips monkey images if facing right
     SDL_RenderCopyEx(controller->renderer, controller->monkeyFrames[monkey->animFrame],
                      NULL, &monkeyRect, 0, NULL, (monkey->facingLeft == 0));
@@ -235,8 +234,6 @@ void initializeGame(SDL_Window *window, Controller *controller, int lives){
     initRopes();
     crocos = newList();
     fruits = newList();
-    initCroco(5, 0);
-    initFruit(4, 2, 50);
 
     controller->time = 0;
 
@@ -248,6 +245,7 @@ void initializeGame(SDL_Window *window, Controller *controller, int lives){
         //Render
         render(controller);
         animate(controller);
+        update();
 
         //collisions
         ledgeCollision(monkey, ledges);
@@ -326,4 +324,11 @@ void freeMemory(){
     //free(donkey);
     free(ropes);
     free(ledges);
+}
+
+
+void update(){
+
+    initCroco(5, 0);
+    initFruit(4, 2, 50);
 }

@@ -31,5 +31,6 @@ void initFruit(int rope, int type, int pos);
 void initializeGame(SDL_Window *window, Controller *controller, int lives);
 int getRope(int rope);
 void endGame(SDL_Window *window, Controller *controller, int win);
+void update();
 void freeMemory();
 
