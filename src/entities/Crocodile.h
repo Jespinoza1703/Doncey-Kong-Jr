@@ -19,6 +19,7 @@ typedef struct
 
     int animFrame;
     int isRed;
+    int speed;
 
 } Crocodile;
 

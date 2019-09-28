@@ -38,7 +38,7 @@ add_executable(Doncey_Kong_Jr main.c
         src/entities/Fruit.c
         src/entities/Fruit.h
         src/client/Cliente.c
-        src/client/Cliente.h)
+        src/client/Cliente.h src/entities/Donkey.h)
 
 
 target_link_libraries(Doncey_Kong_Jr -lSDL2 -lSDL2_image)

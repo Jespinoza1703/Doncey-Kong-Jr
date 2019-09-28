@@ -15,5 +15,5 @@ int main(int argc, char *argv[]){
     createWindow(window, &controller);
     //start();
 
-    initializeGame(window, &controller, LIVESAMOUNT);
+    initializeGame(window, &controller, LIVESAMOUNT, CROCOSPEED);
 }

@@ -79,7 +79,7 @@ int eventManager(SDL_Window *window, Controller *controller)
         if (monkey->y >= SCREEN_HEIGHT) {
             monkey->lives--;
             freeMemory();
-            initializeGame(window, controller, monkey->lives);
+            initializeGame(window, controller, monkey->lives, CROCOSPEED);
         }
     }
     if(monkey->gravity) monkey->y += GRAVITY;
@@ -149,8 +149,8 @@ void animate(Controller *controller)
 void initMonkey(int lives) {
 
     monkey = (Monkey*) malloc(sizeof(Monkey));
-    monkey->x = 320 - 40;
-    monkey->y = 240 - 40;
+    monkey->x = 320;
+    monkey->y = 240;
     monkey->width = 80;
     monkey->height = 50;
     monkey->lives = lives;
@@ -164,6 +164,15 @@ void initMonkey(int lives) {
     monkey->fruitColliding = 0;
     monkey->crocoColliding = 0;
     monkey->gravity = 1;
+}
+
+void initDonkey() {
+
+    donkey = (Donkey*) malloc(sizeof(Donkey));
+    donkey->x = 10;
+    donkey->y = 110;
+    donkey->width = 140;
+    donkey->height = 85;
 }
 
 //init ledges
@@ -194,7 +203,7 @@ void initRopes(){
     ropes[7] = newRope(1050, 210, 19, 263);
 }
 
-void initCroco(int rope, int isRed){
+void initCroco(int rope, int isRed, int speed){
 
     Crocodile *croco = (Crocodile*) malloc(sizeof(Crocodile));
     croco->isRed = isRed;
@@ -208,6 +217,7 @@ void initCroco(int rope, int isRed){
     if(isRed == 0) croco->rope = ropes[getRope(rand() % 8)];
     croco->facingDown = 0;
     croco->animFrame = 0;
+    croco->speed = speed;
     Node *node = newNode(croco);
     insertNode(crocos, node);
 }
@@ -226,10 +236,11 @@ void initFruit(int rope, int type, int pos){
     insertNode(fruits, node);
 }
 
-void initializeGame(SDL_Window *window, Controller *controller, int lives){
+void initializeGame(SDL_Window *window, Controller *controller, int lives, int crocoSpeed){
 
     loadGraphics(controller);
     initMonkey(lives);
+    initDonkey();
     initLedges();
     initRopes();
     crocos = newList();
@@ -238,10 +249,10 @@ void initializeGame(SDL_Window *window, Controller *controller, int lives){
     char *pD = parserData();
     int i = atoi(pD);
     */
-    initCroco(5, 1);
+    initCroco(5, 1, crocoSpeed);
     initFruit(3, 2, 50);
     initFruit(0, 3, 50);
-    initCroco(2, 0);
+    initCroco(2, 0, crocoSpeed);
 
     controller->time = 0;
 
@@ -259,33 +270,38 @@ void initializeGame(SDL_Window *window, Controller *controller, int lives){
         ledgeCollision(monkey, ledges);
         if(crocoCollision(monkey, crocos)) {
             freeMemory();
-            initializeGame(window, controller, monkey->lives);
+            initializeGame(window, controller, monkey->lives, CROCOSPEED);
             break;
         }
 
         if(ropeCollision(monkey, ropes)){
             monkey->onRope = 1;
             monkey->gravity = 0;
-        }else
-            monkey->gravity = 1;
+        }else monkey->gravity = 1;
 
         if(getSize(fruits) > 0) fruitCollision(monkey, fruits);
 
+        if(donkeyCollision(monkey, donkey)){
+
+            Crocodile *croco = (Crocodile *)getNode(crocos, 0)->value;
+            freeMemory();
+            initializeGame(window, controller, monkey->lives, (croco->speed*1.5));
+        }
+        //Manage collisions
         if(controller->time % 300 == 0) {
             monkey->fruitColliding = 0;
             monkey->crocoColliding = 0;
+            monkey->donkeyColliding = 0;
         }
-
+        //Move crocos
         for (int i = 0; i < getSize(crocos); i++) {
 
             Crocodile *croco = (Crocodile *)getNode(crocos, i)->value;
             if(croco->y < SCREEN_HEIGHT)
                 crocoMove(croco);
-            else
-                deleteNode(crocos, getNode(crocos, i));
         }
-        for (int i = 0; i < getSize(fruits); i++) {
 
+        for (int i = 0; i < getSize(fruits); i++) {
             Fruit *fruit = (Fruit *)getNode(fruits, i)->value;
             setFruit(fruit);
         }
@@ -316,12 +332,12 @@ void endGame(SDL_Window *window, Controller *controller, int win){
 
     if(win == 1){
         freeMemory();
-        initializeGame(window, controller, 3);
+        initializeGame(window, controller, 3, CROCOSPEED);
     }
     else{
         if(controller->time % 50 == 0){
             freeMemory();
-            initializeGame(window, controller, 3);
+            initializeGame(window, controller, 3, CROCOSPEED);
         }
     }
 }
@@ -333,7 +349,7 @@ void freeMemory(){
     for(int i = 0; i < LEDGEAMOUNT; i++)
         free(ledges[i]);
     free(monkey);
-    //free(donkey);
+    free(donkey);
     free(ropes);
     free(ledges);
 }

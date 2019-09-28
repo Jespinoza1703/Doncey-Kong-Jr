@@ -101,3 +101,13 @@ Node *fruitCollision(Monkey *monkey, LinkedList *fruits){
         else return 0;
     }
 }
+
+int *donkeyCollision(Monkey *monkey, Donkey *donkey){
+
+    if(monkey->x + monkey->width >= donkey->x && monkey->x < donkey->x + donkey->width &&
+       monkey->y + monkey->height >= donkey->y && monkey->y < donkey->y + donkey->height) {
+
+        return 1;
+    }
+    else return 0;
+}

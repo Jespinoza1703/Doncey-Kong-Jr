@@ -9,10 +9,13 @@
 #include "../Util/Collisions.h"
 #include "../structures/LinkedList.h"
 #include "../client/Cliente.h"
-
+#include "../entities/Donkey.h"
 
 //Players
 Monkey *monkey;
+
+//Donkey
+Donkey *donkey;
 
 //Ledges/Ropes
 Ledge **ledges;
@@ -25,11 +28,12 @@ void render(Controller *controller);
 void createWindow(SDL_Window *window, Controller *controller);
 void animate(Controller *controller);
 void initMonkey(int lives);
+void initDonkey();
 void initLedges();
 void initRopes();
-void initCroco(int rope, int isRed);
+void initCroco(int rope, int isRed, int speed);
 void initFruit(int rope, int type, int pos);
-void initializeGame(SDL_Window *window, Controller *controller, int lives);
+void initializeGame(SDL_Window *window, Controller *controller, int lives, int crocoSpeed);
 int getRope(int rope);
 void endGame(SDL_Window *window, Controller *controller, int win);
 void update();
