@@ -78,3 +78,26 @@ int ropeCollision(Monkey *monkey, Rope **ropes){
     }
     return monkey->onRope;
 }
+
+
+int fruitCollision(Monkey *monkey, LinkedList *fruits){
+
+    for(int i = 0; i < getSize(fruits); i++)
+    {
+        Fruit *fruit = (Fruit *)getNode(fruit, i)->value;
+
+        if(monkey->x + monkey->width >= fruit->x && monkey->x < fruit->x + fruit->width &&
+           monkey->y + monkey->height >= fruit->y && monkey->y < fruit->y + fruit->height) {
+
+            if (!monkey->isColliding) {
+                if(monkey->lives < 3) {
+                    monkey->lives++;
+                    monkey->isColliding = 1;
+                }
+                return 1;
+            }
+
+        }
+        else return 0;
+    }
+}

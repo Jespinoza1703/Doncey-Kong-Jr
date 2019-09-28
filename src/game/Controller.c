@@ -3,7 +3,8 @@
 //
 
 #include "Controller.h"
-#include "Crocodile.h"
+#include "../entities/Crocodile.h"
+#include "../entities/Fruit.h"
 
 
 //Load images and create rendering textures from them
@@ -309,7 +310,30 @@ void renderCrocos(Controller *controller, LinkedList *crocos) {
             SDL_RenderCopy(controller->renderer, controller->blueCrocoFrames[i], NULL, &crocoRect);
         }
     }
+}
 
+void renderFruits(Controller *controller, LinkedList *fruits) {
+
+    for (int i = 0; i < getSize(fruits); i++) {
+        Fruit *fruit = (Crocodile *)getNode(fruits, i)->value;
+
+        SDL_Rect fruitRect = {
+                fruit->x, fruit->y,
+                fruit->width, fruit->height
+        };
+
+        if(fruit->type == 2){
+            SDL_RenderCopy(controller->renderer, controller->apple_img, NULL, &fruitRect);
+        }
+
+        if(fruit->type == 3){
+            SDL_RenderCopy(controller->renderer, controller->banana_img, NULL, &fruitRect);
+        }
+
+        if(fruit->type == 4){
+            SDL_RenderCopy(controller->renderer, controller->mango_img, NULL, &fruitRect);
+        }
+    }
 }
 
 

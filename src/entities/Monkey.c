@@ -57,7 +57,7 @@ void jump(Monkey *monkey) {
 
     if (!monkey->isJumping) {
 
-        if (monkey->dy < 100) {
+        if (monkey->dy < 80) {
             monkey->y -= SPEED*3;
             monkey->dy += SPEED;
             monkey->isJumping;

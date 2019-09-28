@@ -1,5 +1,6 @@
 #include "Game.h"
 #include "../entities/Crocodile.h"
+#include "../entities/Fruit.h"
 
 int eventManager(SDL_Window *window, Controller *controller)
 {
@@ -99,6 +100,7 @@ void render(Controller *controller)
     renderLives(controller, monkey);
     renderDonkey(controller);
     if(getSize(crocos) > 0) renderCrocos(controller, crocos);
+    if(getSize(fruits) > 0) renderFruits(controller, fruits);
 
     //draw a rectangle at monkey's position
     SDL_Rect rect = {monkey->x, monkey->y,
@@ -209,7 +211,18 @@ void initCroco(int rope, int isRed){
     croco->onRope = 0;
     Node *node = newNode(croco);
     insertNode(crocos, node);
+}
 
+void initFruit(int rope, int type){
+
+    Fruit *fruit = (Fruit*) malloc(sizeof(Fruit));
+    fruit->type = type;
+    fruit->width = 45;
+    fruit->height = 45;
+    fruit->x = 500;
+    fruit->y = 300;
+    Node *node = newNode(fruit);
+    insertNode(fruits, node);
 }
 
 void initializeGame(SDL_Window *window, Controller *controller, int lives){
@@ -219,7 +232,9 @@ void initializeGame(SDL_Window *window, Controller *controller, int lives){
     initLedges();
     initRopes();
     crocos = newList();
+    fruits = newList();
     initCroco(1, 0);
+    initFruit(1, 2);
 
     controller->time = 0;
 
@@ -238,8 +253,9 @@ void initializeGame(SDL_Window *window, Controller *controller, int lives){
             break;
         }
         ropeCollision(monkey, ropes);
+        if(getSize(fruits) > 0) fruitCollision(monkey, fruits);
 
-        if(controller->time % 100 == 0) monkey->isColliding = 0;
+        if(controller->time % 500 == 0) monkey->isColliding = 0;
 
         crocoMove((Crocodile *)getNode(crocos, 0)->value);
         int k = controller->time;

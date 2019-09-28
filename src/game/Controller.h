@@ -9,9 +9,9 @@
 #include "SDL_image.h"
 #include "../Util/GlobalVariables.h"
 #include "../structures/LinkedList.h"
-#include "Ledge.h"
-#include "Rope.h"
-#include "Monkey.h"
+#include "../entities/Ledge.h"
+#include "../entities/Rope.h"
+#include "../entities/Monkey.h"
 
 
 typedef struct
@@ -44,6 +44,7 @@ void renderRopes(Controller *controller, Rope **ropes);
 void renderLives(Controller *controller, Monkey *monkey);
 void renderDonkey(Controller *controller);
 void renderCrocos(Controller *controller, LinkedList *crocos);
+void renderFruits(Controller *controller, LinkedList *fruits);
 void closeWindow(SDL_Window *window, Controller *controller);
 
 
