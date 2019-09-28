@@ -170,7 +170,7 @@ void initMonkey(int lives) {
 void initLedges(){
 
     ledges = (Ledge**) malloc(sizeof(Ledge*) * LEDGEAMOUNT);
-    ledges[LEDGEAMOUNT-1] = newLedge(10, 195, SCREEN_WIDTH*0.6, 25);
+    ledges[LEDGEAMOUNT-1] = newLedge(10, 195, SCREEN_WIDTH*0.55, 25);
     ledges[LEDGEAMOUNT-2] = newLedge(590, 160, SCREEN_WIDTH*0.25, 25);
     ledges[LEDGEAMOUNT-3] = newLedge(250, 100, SCREEN_WIDTH*0.08, 25);
     ledges[LEDGEAMOUNT-4] = newLedge(200, 330, SCREEN_WIDTH*0.11, 25);

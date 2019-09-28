@@ -15,26 +15,25 @@ void ledgeCollision(Monkey *monkey, Ledge **ledges)
         if(monkey->x + monkey->width/2 > ledgeX && monkey->x + monkey->width/2 < ledgeX + ledgeWidth)
         {
             //are we bumping our head?
-            if(monkey->y < ledgeY + ledgeHeight && monkey->y > ledgeY && monkey->dy < 0)
+            if(monkey->y < ledgeY + ledgeHeight && monkey->y > ledgeY)
             {
                 //stop jump velocity
                 monkey->dy = 0;
-                monkey->onLedge = 1;
+                monkey->onLedge = 0;
 
-                //correct y
-                monkey->y += SPEED;
+                monkey->y += GRAVITY;
             }
         }
 
         if(monkey->x + monkey->width > ledgeX && monkey->x < ledgeX + ledgeWidth)
         {
-            //are we landing on the ledge
-            if(monkey->y + monkey->height > ledgeY && monkey->y < ledgeY && monkey->dy > 0)
+            //landing on ledge
+            if(monkey->y + monkey->height > ledgeY && monkey->y < ledgeY)
             {
                 //correct y
                 monkey->y = ledgeY - monkey->height;
 
-                //landed on this ledge, stop any jump velocity
+                //stop jump velocity
                 monkey->dy = 0;
                 monkey->onLedge = 1;
             }
