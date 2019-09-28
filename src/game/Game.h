@@ -29,6 +29,7 @@ void initRopes();
 void initCroco(int rope, int isRed);
 void initFruit(int rope, int type);
 void initializeGame(SDL_Window *window, Controller *controller, int lives);
+int getRope(int rope);
 void endGame(SDL_Window *window, Controller *controller, int win);
 void freeMemory();
 

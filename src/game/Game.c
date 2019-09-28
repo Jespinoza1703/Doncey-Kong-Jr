@@ -102,12 +102,11 @@ void render(Controller *controller)
     if(getSize(fruits) > 0) renderFruits(controller, fruits);
 
     //draw a rectangle at monkey's position
-    SDL_Rect rect = {monkey->x, monkey->y,
+    SDL_Rect monkeyRect = {monkey->x, monkey->y,
                      monkey->width, monkey->height};
     //Flips monkey images if facing right
     SDL_RenderCopyEx(controller->renderer, controller->monkeyFrames[monkey->animFrame],
-                     NULL, &rect, 0, NULL, (monkey->facingLeft == 0));
-
+                     NULL, &monkeyRect, 0, NULL, (monkey->facingLeft == 0));
 
 
 
@@ -141,6 +140,7 @@ void animate(Controller *controller)
 
     if(controller->time % 15 == 0) {
         animateMonkey(monkey);
+        animateCroco(crocos);
     }
 
     monkey->dy += GRAVITY;
@@ -204,10 +204,10 @@ void initCroco(int rope, int isRed){
     croco->y = 150;
     croco->dx = 0;
     croco->dy = 0;
+    croco->rope = ropes[getRope(rope)];
     croco->facingDown = 0;
     croco->facingUp = 0;
     croco->animFrame = 0;
-    croco->onRope = 0;
     Node *node = newNode(croco);
     insertNode(crocos, node);
 }
@@ -232,7 +232,7 @@ void initializeGame(SDL_Window *window, Controller *controller, int lives){
     initRopes();
     crocos = newList();
     fruits = newList();
-    initCroco(1, 0);
+    initCroco(5, 0);
     initFruit(1, 2);
 
     controller->time = 0;
@@ -245,6 +245,8 @@ void initializeGame(SDL_Window *window, Controller *controller, int lives){
         //Render
         render(controller);
         animate(controller);
+
+        //collisions
         ledgeCollision(monkey, ledges);
         if(crocoCollision(monkey, crocos)) {
             freeMemory();
@@ -260,7 +262,14 @@ void initializeGame(SDL_Window *window, Controller *controller, int lives){
 
         if(controller->time % 500 == 0) monkey->isColliding = 0;
 
-        crocoMove((Crocodile *)getNode(crocos, 0)->value);
+        for (int i = 0; i < getSize(crocos); i++) {
+
+            Crocodile *croco = (Crocodile *)getNode(crocos, i)->value;
+            if(croco->y < SCREEN_HEIGHT)
+                crocoMove(croco);
+            else
+                deleteNode(crocos, getNode(crocos, i));
+        }
 
         SDL_Delay(5);
     }
@@ -268,6 +277,19 @@ void initializeGame(SDL_Window *window, Controller *controller, int lives){
     closeWindow(window, &controller);
     freeMemory();
 }
+
+
+int getRope(int rope){
+    int result = -1;
+    for(int i = 0; i < ROPEAMOUNT; i++){
+        if(result != rope){
+            result++;
+        }
+        else return result;
+    }
+    return result;
+}
+
 
 
 void endGame(SDL_Window *window, Controller *controller, int win){

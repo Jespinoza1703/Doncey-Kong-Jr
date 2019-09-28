@@ -6,14 +6,15 @@
 #define DONCEY_KONG_JR_CROCODILE_H
 
 #include "../Util/GlobalVariables.h"
-#include "../Util/Collisions.h"
+#include "Rope.h"
+#include "../structures/LinkedList.h"
 
 typedef struct
 {
     float x, y;
     float dx, dy;
     int width, height;
-    int onRope;
+    Rope *rope;
     int facingUp, facingDown;
 
     int animFrame;
@@ -24,7 +25,7 @@ typedef struct
 
 void crocoMoveDown(Crocodile *croco);
 void crocoMove(Crocodile *croco);
-void animateCroco(Crocodile *croco);
+void animateCroco(LinkedList *crocos);
 int collideRope(Crocodile *croco);
 
 

@@ -50,6 +50,7 @@ void deleteNode(LinkedList *list, Node* node) {
         tmp->next = deleted->next;
         free(deleted);
     }
+    list->size--;
 }
 
 /*

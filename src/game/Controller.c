@@ -121,6 +121,33 @@ void loadGraphics(Controller *controller) {
     controller->blueCrocoFrames[0] = SDL_CreateTextureFromSurface(controller->renderer, surface);
     SDL_FreeSurface(surface);
 
+    surface = IMG_Load("../images/blueCroco1.png");
+    if (surface == NULL) {
+        printf("Cannot find blueCroco1.png\n\n");
+        SDL_Quit();
+        exit(1);
+    }
+    controller->blueCrocoFrames[1] = SDL_CreateTextureFromSurface(controller->renderer, surface);
+    SDL_FreeSurface(surface);
+
+    surface = IMG_Load("../images/blueCroco2.png");
+    if (surface == NULL) {
+        printf("Cannot find blueCroco2.png\n\n");
+        SDL_Quit();
+        exit(1);
+    }
+    controller->blueCrocoFrames[2] = SDL_CreateTextureFromSurface(controller->renderer, surface);
+    SDL_FreeSurface(surface);
+
+    surface = IMG_Load("../images/blueCroco3.png");
+    if (surface == NULL) {
+        printf("Cannot find blueCroco4.png\n\n");
+        SDL_Quit();
+        exit(1);
+    }
+    controller->blueCrocoFrames[3] = SDL_CreateTextureFromSurface(controller->renderer, surface);
+    SDL_FreeSurface(surface);
+
 
     /*
      * Red Crocodile
@@ -134,6 +161,32 @@ void loadGraphics(Controller *controller) {
     controller->redCrocoFrames[0] = SDL_CreateTextureFromSurface(controller->renderer, surface);
     SDL_FreeSurface(surface);
 
+    surface = IMG_Load("../images/redCroco1.png");
+    if (surface == NULL) {
+        printf("Cannot find redCroco1.png\n\n");
+        SDL_Quit();
+        exit(1);
+    }
+    controller->redCrocoFrames[1] = SDL_CreateTextureFromSurface(controller->renderer, surface);
+    SDL_FreeSurface(surface);
+
+    surface = IMG_Load("../images/redCroco2.png");
+    if (surface == NULL) {
+        printf("Cannot find redCroco2.png\n\n");
+        SDL_Quit();
+        exit(1);
+    }
+    controller->redCrocoFrames[2] = SDL_CreateTextureFromSurface(controller->renderer, surface);
+    SDL_FreeSurface(surface);
+
+    surface = IMG_Load("../images/redCroco3.png");
+    if (surface == NULL) {
+        printf("Cannot find redCroco3.png\n\n");
+        SDL_Quit();
+        exit(1);
+    }
+    controller->redCrocoFrames[3] = SDL_CreateTextureFromSurface(controller->renderer, surface);
+    SDL_FreeSurface(surface);
 
     /*
      * Ledge
@@ -304,10 +357,11 @@ void renderCrocos(Controller *controller, LinkedList *crocos) {
                 croco->x, croco->y,
                 croco->width, croco->height
         };
+
         if(croco->isRed){
-            SDL_RenderCopy(controller->renderer, controller->redCrocoFrames[i], NULL, &crocoRect);
+            SDL_RenderCopy(controller->renderer, controller->redCrocoFrames[croco->animFrame], NULL, &crocoRect);
         }else{
-            SDL_RenderCopy(controller->renderer, controller->blueCrocoFrames[i], NULL, &crocoRect);
+            SDL_RenderCopy(controller->renderer, controller->blueCrocoFrames[croco->animFrame], NULL, &crocoRect);
         }
     }
 }

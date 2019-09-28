@@ -4,32 +4,40 @@
 
 
 #include "Crocodile.h"
+#include "../structures/LinkedList.h"
 
+void crocoMove(Crocodile *croco) {
 
-void crocoMoveDown(Crocodile *croco){
+    if (!croco->isRed) {
 
-    croco->x = croco->dx;
-    if(!croco->isRed){
-        croco->y += CROCOSPEED;
-    }
-    else{
-        croco->y += CROCOSPEED;
-        croco->dy = croco->y;
+        if (croco->x < croco->rope->x){
+            croco->x += CROCOSPEED;
+        }
+        else {
+            croco->facingDown = 1;
+            croco->y += CROCOSPEED;
+        }
     }
 }
 
-void crocoMove(Crocodile *croco){
+void animateCroco(LinkedList *crocos){
 
-    croco->x += CROCOSPEED;
-    croco->dx = croco->x;
-    /*
-    if(collideRope(croco)){
-        croco->facingDown = 1;
-        crocoMoveDown(croco);
+    for (int i = 0; i < getSize(crocos); i++) {
+        Crocodile *croco = (Crocodile *) getNode(crocos, i)->value;
+
+        if(!croco->facingDown){
+
+            if (croco->animFrame == 0) {
+                croco->animFrame = 1;
+            }else croco->animFrame = 0;
+        }
+        else{
+            int width = croco->width;
+            croco->width = croco->height;
+            croco->height = width;
+            if (croco->animFrame == 2) {
+                croco->animFrame = 3;
+            }else croco->animFrame = 2;
+        }
     }
-     */
-}
-
-void animateCroco(Crocodile *croco){
-
 }
