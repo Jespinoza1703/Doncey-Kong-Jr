@@ -204,7 +204,8 @@ void initCroco(int rope, int isRed){
     croco->y = 150;
     croco->dx = 0;
     croco->dy = 0;
-    croco->rope = ropes[getRope(rope)];
+    if(isRed == 1) croco->rope = ropes[getRope(rope)];
+    if(isRed == 0) croco->rope = ropes[getRope(rand() % 8)];
     croco->facingDown = 0;
     croco->facingUp = 0;
     croco->animFrame = 0;
