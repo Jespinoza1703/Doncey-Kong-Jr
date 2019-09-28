@@ -97,7 +97,6 @@ Node *fruitCollision(Monkey *monkey, LinkedList *fruits){
                 }
                 return getNode(fruits, i);
             }
-
         }
         else return 0;
     }
