@@ -19,7 +19,26 @@ add_executable(Doncey_Kong_Jr main.c
         src/game/Game.c
         src/game/Game.h
         src/game/Controller.c
-        src/game/Controller.h src/structures/LinkedList.c src/structures/LinkedList.h src/structures/Node.c src/structures/Node.h src/entities/Monkey.c src/entities/Monkey.h src/entities/Ledge.c src/entities/Ledge.h src/Util/GlobalVariables.h src/entities/Rope.c src/entities/Rope.h src/Util/Collisions.c src/Util/Collisions.h src/entities/Crocodile.c src/entities/Crocodile.h src/entities/Fruit.c src/entities/Fruit.h)
+        src/game/Controller.h
+        src/structures/LinkedList.c
+        src/structures/LinkedList.h
+        src/structures/Node.c
+        src/structures/Node.h
+        src/entities/Monkey.c
+        src/entities/Monkey.h
+        src/entities/Ledge.c
+        src/entities/Ledge.h
+        src/Util/GlobalVariables.h
+        src/entities/Rope.c
+        src/entities/Rope.h
+        src/Util/Collisions.c
+        src/Util/Collisions.h
+        src/entities/Crocodile.c
+        src/entities/Crocodile.h
+        src/entities/Fruit.c
+        src/entities/Fruit.h
+        src/client/Cliente.c
+        src/client/Cliente.h)
 
 
 target_link_libraries(Doncey_Kong_Jr -lSDL2 -lSDL2_image)

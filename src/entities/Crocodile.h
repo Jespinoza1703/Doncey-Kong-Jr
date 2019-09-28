@@ -15,7 +15,7 @@ typedef struct
     float dx, dy;
     int width, height;
     Rope *rope;
-    int facingUp, facingDown;
+    int facingDown;
 
     int animFrame;
     int isRed;

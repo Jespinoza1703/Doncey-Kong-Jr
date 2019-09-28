@@ -8,14 +8,25 @@
 
 void crocoMove(Crocodile *croco) {
 
-    if (!croco->isRed) {
+    if (!croco->rope == NULL) {
 
         if (croco->x < croco->rope->x){
             croco->x += CROCOSPEED;
         }
         else {
-            croco->facingDown = 1;
-            croco->y += CROCOSPEED;
+            if(croco->isRed){
+                if(croco->dy >= (croco->rope->y + croco->rope->height)) {
+                    croco->dy += CROCOSPEED;
+                    croco->y -= croco->dy;
+                }
+                else {
+                    croco->y += CROCOSPEED;
+                    croco->dy = 0;
+                }
+            }
+            else{
+                croco->y += CROCOSPEED;
+            }
         }
     }
 }

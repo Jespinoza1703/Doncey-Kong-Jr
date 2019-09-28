@@ -206,7 +206,6 @@ void initCroco(int rope, int isRed){
     if(isRed == 1) croco->rope = ropes[getRope(rope)];
     if(isRed == 0) croco->rope = ropes[getRope(rand() % 8)];
     croco->facingDown = 0;
-    croco->facingUp = 0;
     croco->animFrame = 0;
     Node *node = newNode(croco);
     insertNode(crocos, node);
@@ -234,6 +233,14 @@ void initializeGame(SDL_Window *window, Controller *controller, int lives){
     initRopes();
     crocos = newList();
     fruits = newList();
+    /*
+    char *pD = parserData();
+    int i = atoi(pD);
+    */
+    initCroco(5, 1);
+    initFruit(4, 3, 50);
+    initCroco(2, 0);
+    initFruit(3, 4, 50);
 
     controller->time = 0;
 
@@ -328,7 +335,4 @@ void freeMemory(){
 
 
 void update(){
-
-    initCroco(5, 0);
-    initFruit(4, 2, 50);
 }

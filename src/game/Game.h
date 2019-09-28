@@ -8,6 +8,7 @@
 #include "../entities/Crocodile.h"
 #include "../Util/Collisions.h"
 #include "../structures/LinkedList.h"
+#include "../client/Cliente.h"
 
 
 //Players
